@@ -1,0 +1,14 @@
+spring:
+  mvc:
+    view:
+      suffix: .html
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/pass
+    username: root
+    password: ajdcjddl2
+    driver-class-name: org.mariadb.jdbc.Driver
+
+
+mybatis:
+  type-aliases-package: com.example.pass.dto
+  mapper-locations: classpath:mappers/*.xml
