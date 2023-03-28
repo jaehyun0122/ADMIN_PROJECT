@@ -24,7 +24,6 @@ public class ReqDto {
     private String reqEndDttm;
     private String isNotification;
     private String isPASSVerify;
-    private String verifyURL;
     private String signTargetTycd;
     private String signTarget;
     private String isUserAgreement;
@@ -32,4 +31,13 @@ public class ReqDto {
     private String reqTxId;
     private String isDgitalSign;
     private String isCombineAuth;
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setOriginalInfo(String originalInfo) {
+        this.originalInfo = originalInfo;
+    }
+
 }

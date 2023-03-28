@@ -11,8 +11,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public class UserDto {
     private String name;
-    private String birthDay; // YYMMDD
+    private String birthday; // YYMMDD
     private String telcoTycd;
     private String phone;
+    private String gender;
 
 }

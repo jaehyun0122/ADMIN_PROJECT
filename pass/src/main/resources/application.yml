@@ -7,7 +7,9 @@ spring:
     username: root
     password: ajdcjddl2
     driver-class-name: org.mariadb.jdbc.Driver
-
+  devtools:
+    livereload:
+      enabled: true
 
 mybatis:
   type-aliases-package: com.example.pass.dto
