@@ -1,4 +1,4 @@
-package com.example.pass.dto;
+package com.example.pass.key;
 
 import org.apache.commons.codec.binary.Base64;
 import javax.crypto.Cipher;

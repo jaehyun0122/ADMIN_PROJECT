@@ -1,10 +1,11 @@
 package com.example.pass.service;
 
-import com.example.pass.dto.AESCipher;
+import com.example.pass.key.AESCipher;
 import com.example.pass.dto.ReqDto;
 import com.example.pass.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
+import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -18,12 +19,14 @@ import java.util.Date;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class ReqServiceImpl implements ReqService{
 
     private static final String Tycd = "S2001"; // 출금이체동의
     private static final String companyCd = "90001";
     private static final String bear = "AT-111111";
     private static final AESCipher aesCipher = new AESCipher("YzNmOGQ2OGI1ZDEwNDA5YmJmZmRhMTI5");
+    private final SqlSession sqlSession;
     private final String reqUrl = "https://api-stg.passauth.co.kr/v1/certification/notice";
     @Override
     public ReqDto getReq(UserDto userDto) {
@@ -33,57 +36,18 @@ public class ReqServiceImpl implements ReqService{
         return reqDto;
     }
 
+//    @Override
+//    public int insertAuth(Map<String, Object> map) {
+//        sqlSession.getMapper(PassDao.class).insertAuth(map);
+//        return 0;
+//    }
+
+    /**
+     * http 요청 함수. 요청 객체, 메소드
+     */
     @Override
-    public JSONArray getRes(ReqDto reqDto) {
-        // start 요청
-        try {
-            URL url = new URL(reqUrl);
-            HttpURLConnection connection = null;
-            BufferedReader br = null;
-            StringBuffer sb = new StringBuffer();
-            JSONArray response = null;
-
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "Bearer "+bear);
-            connection.setRequestProperty("Content-type", "Application/json; charset=utf8");
-            connection.setRequestProperty("Accept", "Application/json; charset=utf8");
-            connection.setDoOutput(true);
-
-            // 요청 데이터 json 변환
-            ObjectMapper om = new ObjectMapper();
-            String json = om.writeValueAsString(reqDto);
-            System.out.println(json);
-            try (OutputStream os = connection.getOutputStream()){
-                byte request_data[] = json.getBytes("utf-8");
-                os.write(request_data);
-                os.close();
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-            connection.connect();
-            // end 요청
-
-            // start response
-            br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            String line;
-
-            while((line = br.readLine()) != null){
-                sb.append(line);
-            }
-            System.out.println(sb);
-            // end response
-
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (ProtocolException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        return null;
+    public StringBuilder getRes(Object reqDto, String method, String reqUrl) {
+        return httpReq(reqDto, method, reqUrl);
     }
 
     /**
@@ -188,7 +152,7 @@ public class ReqServiceImpl implements ReqService{
                 .channelTycd("PW")
                 .channelNm("채널 이름")
                 .agencyCd("11")
-                .isDgitalSign("Y")
+                .isDigitalSign("Y")
                 .isCombineAuth("N")
                 .isUserAgreement("N")
                 .originalInfo("originalInfo")
@@ -210,5 +174,58 @@ public class ReqServiceImpl implements ReqService{
         return sb.toString();
     }
 
+
+    /**
+     *body, method, url 로 http요청
+     */
+    private StringBuilder httpReq(Object reqDto, String method, String reqUrl){
+        // start 요청
+        HttpURLConnection connection = null;
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            URL url = new URL(reqUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(method);
+            connection.setRequestProperty("Authorization", "Bearer "+bear);
+            connection.setRequestProperty("Content-type", "Application/json; charset=utf8");
+            connection.setRequestProperty("Accept", "Application/json; charset=utf8");
+            connection.setDoOutput(true);
+
+            // 요청 데이터 json 변환
+            ObjectMapper om = new ObjectMapper();
+            String json = om.writeValueAsString(reqDto);
+
+            // body에 json 담기
+            try (OutputStream os = connection.getOutputStream()){
+                byte request_data[] = json.getBytes("utf-8");
+                os.write(request_data);
+                os.close();
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+            connection.connect();
+            // end 요청
+
+            // start response
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            String line;
+
+            while((line = br.readLine()) != null){
+                sb.append(line);
+            }
+            // end response
+
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return sb;
+    }
 
 }

@@ -119,8 +119,47 @@
 
 <script>
 	$(document).ready(function(){
+		$.ajax({
+			type: "GET",
+			url: "/result",
+			data: {
+				certTxId : localStorage.getItem("certTxId")
+			},
+			success: function (data){
+				if(data["resultTycd"] == 1){
+					location.href = "showData";
+				}
+			},
+			error: function (){
+				alert("전자서명 error")
+			}
+		}) // end ajax
 
 	})
+
+	$(".ok").click(function (){
+		location.href = "showData"
+	})
+
+	$(".again").click(function (){
+		$.ajax({
+			type: "GET",
+			url: "/result",
+			data: {
+				certTxId : localStorage.getItem("certTxId")
+			},
+			success: function (data){
+
+			},
+			error: function (){
+				alert("전자서명 error")
+			}
+		}) // end ajax
+	})
+
+
+
+
 	$('.layer .layer_btnwrap a').on("click", function(){
 		$(this).parents(".layer").hide();
 		$("span.deem").hide();

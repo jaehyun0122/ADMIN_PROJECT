@@ -155,13 +155,13 @@ $(document).ready(function(){
 			url : "/",
 			data: params,
 			success: function(data){
-				location.href = "moveJoin";
 				$.ajax({
 					type: "GET",
 					url: "/join",
 					data: data,
 					success: function (data){
-
+						localStorage.setItem("certTxId", data)
+						location.href = "moveJoin";
 					},
 					error: function (){
 						alert("join error")

@@ -1,8 +1,6 @@
 package com.example.pass.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Builder
@@ -29,12 +27,8 @@ public class ReqDto {
     private String isUserAgreement;
     private String originalInfo;
     private String reqTxId;
-    private String isDgitalSign;
+    private String isDigitalSign;
     private String isCombineAuth;
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
 
     public void setOriginalInfo(String originalInfo) {
         this.originalInfo = originalInfo;

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결과 데이터</title>
+</head>
+<body>
+    <table style="border: 1px solid #96D4D4; border-radius: 10px">
+        <thead>
+            <tr>
+                <th>reqTxId</th>
+                <th>telcoTxId</th>
+                <th>certTxId</th>
+                <th>resultTycd</th>
+                <th>resultDttm</th>
+                <th>digitalSign</th>
+                <th>ci</th>
+                <th>telcoTycd</th>
+                <th>userNm</th>
+                <th>birthday</th>
+                <th>gender</th>
+                <th>phoneNo</th>
+            <tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>body</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $.ajax({
+            type: "GET",
+            url: "/authResult",
+            data: {
+                certTxId : localStorage.getItem("certTxId")
+            },
+            success: function (data){
+                console.log(data)
+            },
+            error: function (){
+                alert("결과 데이터 error")
+            }
+        }) // end ajax
+    })
+</script>
+<style>
+    body{
+        text-align: -webkit-center;
+    }
+    th{
+        border: 2px solid black;
+    }
+</style>
+</html>
