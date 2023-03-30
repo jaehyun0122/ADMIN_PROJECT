@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>PASS 인증서</title>
+<link rel="stylesheet" type="text/css" href="/css/common.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/slick.min.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+	
+	<!-- header -->
+	<!-- <div class="header">
+	</div> -->
+	<!-- //header -->
+
+	<!-- content -->
+	<div id="content">
+		<div class="container">
+
+			<div class="page_title">
+				<div class="thum"><img src="https://via.placeholder.com/70" alt="이미지"></div>
+				<div class="inner">
+					<h2>국세청</h2>
+					<p>PASS 앱에서 인증을 완료해주세요.</p>
+				</div>
+			</div>
+
+			<!-- <div class="page_title">
+				<div class="inner">
+					<h2><em class="blind">PASS 인증서</em></h2>
+					<p>휴대폰 PASS앱에서 인증을 완료해주세요.</p>
+				</div>
+			</div> -->
+
+			<div class="join_section">
+
+				<div class="timeout">
+					<div class="time">
+						유효시간 5:00
+					</div>
+					<div class="loading_bar1">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+
+				<div class="inner">
+
+
+					<div class="slide_wrap">
+						<div class="step_slide">
+							<div class="item">
+								<ol class="join_step">
+									<li><span>STEP1.</span>내 휴대폰번호로 발송된 PUSH 선택 <img src="/images/img_step1.png" alt=""></li>
+									<li><span>STEP2.</span>PASS에 등록한 PIN또는 생체인증<img src="/images/img_step2.png" alt=""></li>
+									<li><span>STEP3.</span>인증 완료 후, 아래 <strong>다음</strong>버튼 클릭</li>
+								</ol>
+								<div class="join_step_btm">
+									<p>PUSH가 오지 않은 경우,<br>스마트폰에서 PASS를 실행해주세요.</p>
+								</div>
+							</div>
+							<div class="item">
+								<div class="howto">
+									<div class="tit"><strong>인증요청(알림)이 휴대폰으로 오지 않는다면?</strong></div>
+									<div class="txt">
+										<p>① [PASS 앱> 홈 화면 또는 인증서 메뉴] 에서 인증 요청 내용을 확인할 수 있습니다.</p>
+										<p>② PASS 앱 설치 확인 및 알림 수신동의 되어 있는지 확인해 주세요.</p>
+										<p>③ 문제가 계속된다면 [PASS인증서 고객센터 : 1800-4273] 로 연락해 주세요.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="btnG">
+						<div><button type="button" class="again"><span>다시 요청</span></button></div>
+						<div><button type="button" class="ok"><span>다음</span></button></div>
+					</div>
+
+
+
+
+				</div>
+			</div><!-- // join_section -->
+
+		</div>
+	</div>
+	<!-- // content -->
+
+	<!-- footer -->
+	<div class="footer">
+	</div>
+	<!-- //footer -->
+</div>
+
+
+
+<span class="deem" style="display: none"></span>
+
+<!-- LAYER POP -->
+<div id="layer" class="layer" style="display:none;">
+    <div class="layer_body">
+        <p class="message timeout"><!-- timeout, error, transient -->
+            인증 시간을 초과하였습니다.<br>요청을 종료합니다.
+        </p>
+    </div>
+    <div class="layer_btnwrap">
+        <a href="login">확인</a>
+    </div>
+</div>
+<!-- //LAYER POP -->
+
+
+
+
+<script>
+$(document).ready(function (){
+	let time = 300; // 초 단위
+	let min = 0;
+	let sec = 0;
+	// 5분뒤 인증시간 초과 알림
+	const interval = setInterval(timeAttack, 1000)
+	function timeAttack(){
+		min = parseInt(time/60);
+		sec = time%60;
+		time--;
+		if(time == -1){
+			clearInterval(interval);
+			$(".layer").css("display", "block")
+			$("span.deem").css("display", "block");
+		}
+		$(".time").html("유효시간 "+min.toString().padStart(2, '0')+":"+sec.toString().padStart(2,'0'))
+	}
+})
+
+	let isNext = false;
+	$(document).ready(function(){
+		$.ajax({
+			type: "GET",
+			url: "/result",
+			data: {
+				certTxId : localStorage.getItem("certTxId")
+			},
+			success: function (data){
+				alert("인증 완료 후 다음 버튼 눌러주세요")
+			},
+			error: function (){
+				alert("전자서명 error")
+			}
+		}) // end ajax
+
+	})
+
+	$(".ok").click(function (){
+		if(isNext){
+			location.href = "showData"
+		}else{
+			alert("인증을 완료해주세요")
+		}
+	})
+
+	$(".again").click(function (){
+		$.ajax({
+			type: "GET",
+			url: "/result",
+			data: {
+				certTxId : localStorage.getItem("certTxId")
+			},
+			success: function (data){
+				if(data['resultTycd'] == 1){
+					isNext = true;
+					alert("인증완료! 다음 버튼 눌러주세요")
+				}else{
+					alert("인증을 완료해주세요")
+				}
+			},
+			error: function (){
+				alert("전자서명 error")
+			}
+		}) // end ajax
+	})
+
+
+
+
+	// $('.layer .layer_btnwrap a').on("click", function(){
+	// 	console.log($(this).parents(".layer"))
+	// 	$(this).parents(".layer").hide();
+	// 	$("span.deem").hide();
+	// })
+
+	/* 이미지 slick.js 슬라이드 */
+	$('.step_slide').slick({
+		autoplay: true,
+		autoplaySpeed:5000,
+	});
+	// $(".step_slide").slick({
+	// 	infinite: false,
+	// 	autoplay: false,
+	// 	arrows: true,
+	// 	speed:300,
+	// 	dots: false,
+	// 	centerMode: true,
+	// 	focusOnSelect: false,
+	// });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결과 데이터</title>
+</head>
+<body>
+    <table class="result">
+        <thead>
+            <tr>
+                <th>reqTxId</th>
+                <th>telcoTxId</th>
+                <th>certTxId</th>
+                <th>resultTycd</th>
+                <th>resultDttm</th>
+                <th>digitalSign</th>
+                <th>ci</th>
+                <th>복호화ci</th>
+                <th>telcoTycd</th>
+                <th>userNm</th>
+                <th>birthday</th>
+                <th>gender</th>
+                <th>phoneNo</th>
+            <tr>
+        </thead>
+        <tbody class="body">
+
+        </tbody>
+    </table>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $.ajax({
+            type: "GET",
+            url: "/authResult",
+            data: {
+                certTxId : localStorage.getItem("certTxId")
+            },
+            success: function (data){
+                console.log(data)
+                let tr = "";
+                data.map(info=>{
+                    tr += `<tr>
+                                <td>${info.reqTxId}</td>
+                                <td>${info.telcoTxId}</td>
+                                <td>${info.certTxId}</td>
+                                <td>${info.resultTycd}</td>
+                                <td>${info.resultDttm}</td>
+                                <td class="longTxt">${info.digitalSign}</td>
+                                <td class="longTxt">${info.CI}</td>
+                                <td class="longTxt">${info.decryptCi}</td>
+                                <td>${info.telcoTycd}</td>
+                                <td>${info.userNm}</td>
+                                <td>${info.birthday}</td>
+                                <td>${info.gender}</td>
+                                <td>${info.phoneNo}</td>
+                            </tr>
+                            `
+                })
+                $(".body").append(tr)
+            },
+            error: function (){
+                alert("결과 데이터 error")
+            }
+        }) // end ajax
+    })
+</script>
+<style>
+    table{
+        height: 400px;
+        border: 2px solid brown;
+        border-collapse: collapse;
+        text-align: center;
+    }
+    th{
+        border-bottom: 2px solid brown;
+    }
+    tr{
+        border-bottom: 2px solid sienna;
+    }
+    td{
+        border: 1px groove;
+        word-break: break-all;
+    }
+    .longTxt{
+        width: 1000px
+    }
+
+</style>
+</html>
