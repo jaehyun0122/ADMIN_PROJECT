@@ -2,6 +2,7 @@ package com.example.pass.dao;
 
 import com.example.pass.dto.ResultReqDto;
 import com.example.pass.dto.ResultResDto;
+import com.example.pass.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,10 @@ public class PassDaoImpl implements PassDao{
     @Override
     public List<ResultResDto> authResult(String certTxId) {
         return sqlSession.getMapper(PassDao.class).authResult(certTxId);
+    }
+
+    @Override
+    public UserDto getUserInfo(String certTxId) {
+        return sqlSession.getMapper(PassDao.class).getUserInfo(certTxId);
     }
 }

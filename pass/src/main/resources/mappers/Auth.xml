@@ -90,9 +90,15 @@
                )
     </insert>
 
-    <select id="authResult" resultType="map" parameterType="string">
+    <select id="authResult" resultType="ResultResDto" parameterType="string">
         select *
         from auth_result
         where certTxId = #{certTxId}
+    </select>
+
+    <select id="getUserInfo" parameterType="string" resultType="UserDto">
+        select userNm, birthday, gender, phoneNo
+        from req_info
+        where certTxId like #{certTxId}
     </select>
 </mapper>

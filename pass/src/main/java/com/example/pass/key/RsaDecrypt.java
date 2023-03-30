@@ -33,7 +33,7 @@ public class RsaDecrypt {
         String privateKey = getPrivate.replace("-----BEGIN PRIVATE KEY-----",
                 "").replaceAll("\\R", "").replace("-----END PRIVATE KEY-----",
                 "");
-        System.out.println(privateKey);
+
         byte[] key = Base64.getDecoder().decode(privateKey);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
         KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -46,7 +46,7 @@ public class RsaDecrypt {
         //복호화 수행
         String decData = new String(cipher.doFinal(decBytes));
         //복호화된 개인키
-        System.out.println("복호화된 CI = " + decData);
+//        System.out.println("복호화된 CI = " + decData);
 
         return decData;
     }

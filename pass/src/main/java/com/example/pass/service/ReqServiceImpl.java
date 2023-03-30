@@ -36,6 +36,10 @@ public class ReqServiceImpl implements ReqService{
         return reqDto;
     }
 
+    @Override
+    public String deAes(String str) throws Exception {
+        return aesCipher.decrypt(str);
+    }
 //    @Override
 //    public int insertAuth(Map<String, Object> map) {
 //        sqlSession.getMapper(PassDao.class).insertAuth(map);
@@ -43,7 +47,8 @@ public class ReqServiceImpl implements ReqService{
 //    }
 
     /**
-     * http 요청 함수. 요청 객체, 메소드
+     * body, 메소드, url
+     * @return 요청 응답
      */
     @Override
     public StringBuilder getRes(Object reqDto, String method, String reqUrl) {
@@ -70,7 +75,7 @@ public class ReqServiceImpl implements ReqService{
             }
         }
 
-        // 성별. 남자 홀수
+        // 성별, 나이에 따른 gender 세팅
         int year = Integer.parseInt(userDto.getBirthday().substring(0, 4));
         if("남".equals(userDto.getGender())){
             // 1800 ~ 1899 9
@@ -101,8 +106,8 @@ public class ReqServiceImpl implements ReqService{
 
         // 암호화 ( phoneNo, userNm, birthday, gender )
         try {
-            userDto.setName(aesCipher.encrypt(userDto.getName()));
-            userDto.setPhone(aesCipher.encrypt(userDto.getPhone()));
+            userDto.setUserNm(aesCipher.encrypt(userDto.getUserNm()));
+            userDto.setPhoneNo(aesCipher.encrypt(userDto.getPhoneNo()));
             userDto.setBirthday(aesCipher.encrypt(userDto.getBirthday()));
             userDto.setGender(aesCipher.encrypt(userDto.getGender()));
         } catch (Exception e) {
@@ -133,10 +138,10 @@ public class ReqServiceImpl implements ReqService{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         ReqDto reqDto = ReqDto.builder()
-                .userNm(userDto.getName())
+                .userNm(userDto.getUserNm())
                 .birthday(userDto.getBirthday())
                 .telcoTycd(userDto.getTelcoTycd())
-                .phoneNo(userDto.getPhone())
+                .phoneNo(userDto.getPhoneNo())
                 .companyCd(companyCd)
                 .serviceTycd(Tycd)
                 .reqTitle("reqTitle") // 아무 텍스트
@@ -177,6 +182,7 @@ public class ReqServiceImpl implements ReqService{
 
     /**
      *body, method, url 로 http요청
+     * @return 요청 응답 데이터
      */
     private StringBuilder httpReq(Object reqDto, String method, String reqUrl){
         // start 요청
@@ -190,6 +196,7 @@ public class ReqServiceImpl implements ReqService{
             connection.setRequestProperty("Authorization", "Bearer "+bear);
             connection.setRequestProperty("Content-type", "Application/json; charset=utf8");
             connection.setRequestProperty("Accept", "Application/json; charset=utf8");
+            // request body에 데이터 담으려면 true
             connection.setDoOutput(true);
 
             // 요청 데이터 json 변환
@@ -200,13 +207,12 @@ public class ReqServiceImpl implements ReqService{
             try (OutputStream os = connection.getOutputStream()){
                 byte request_data[] = json.getBytes("utf-8");
                 os.write(request_data);
-                os.close();
             }catch(Exception e) {
                 e.printStackTrace();
             }
             connection.connect();
             // end 요청
-
+            System.out.println(json);
             // start response
             br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             String line;

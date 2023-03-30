@@ -23,6 +23,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -64,7 +65,7 @@ public class MainController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("ReqDto", reqDto);
-        map.put("ResDto", resDto);
+        map.put("ResDto", resDto); // certTxId, reqTxId
 
         passDao.insertAuth(map);
 
@@ -72,27 +73,51 @@ public class MainController {
     }
 
     @GetMapping("result")
-    public String result(@RequestParam String certTxId) throws IOException, ParseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        // 검증 결과 요청 파라미터
+    @ResponseBody
+    public ResultResDto result(@RequestParam String certTxId) throws IOException, ParseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         ObjectMapper om = new ObjectMapper();
+        // 검증 결과 요청 파라미터
         // certTxId로 검증 결과 요청 파라미터 가져옴
         ResultReqDto resultReqDto = passDao.resultReq(certTxId);
         // 검증 결과 요청 파리미터에 대한 응답 DB에 저장
         ResultResDto resDto = om.readValue(reqService.getRes(resultReqDto, "POST", resultUrl).toString(), ResultResDto.class);
         passDao.insertAuthResult(resDto);
 
-        // ci가 있다면 복호화
-        if(resDto.getCi().length() > 0){
-            RsaDecrypt rsaDecrypt = new RsaDecrypt(resDto.getCi());
-            rsaDecrypt.ciDecryption();
-        }
-
-        return "result";
+        return resDto;
     }
 
     @GetMapping("authResult")
     @ResponseBody
-    public List<ResultResDto> authResult(@RequestParam String certTxId){
-        return passDao.authResult(certTxId);
+    public List<ResultResDto> authResult(@RequestParam String certTxId) throws Exception {
+        List<ResultResDto> authResult = passDao.authResult(certTxId);
+        // ci 복호하
+        UserDto userInfo = setUserInfo(passDao.getUserInfo(certTxId));
+        for(ResultResDto res : authResult){
+            res = setResult(res, userInfo);
+            if("1".equals(res.getResultTycd()) && certTxId.equals(res.getCertTxId())){
+                RsaDecrypt rsaDecrypt = new RsaDecrypt(res.getCi());
+                res.setDecryptCi(rsaDecrypt.ciDecryption());
+            }
+        }
+
+
+        return authResult;
+    }
+
+
+    private UserDto setUserInfo(UserDto userInfo) throws Exception {
+        userInfo.setUserNm(reqService.deAes(userInfo.getUserNm()));
+        userInfo.setGender(reqService.deAes(userInfo.getGender()));
+        userInfo.setBirthday(reqService.deAes(userInfo.getBirthday()));
+        userInfo.setPhoneNo(reqService.deAes(userInfo.getPhoneNo()));
+        return userInfo;
+    }
+
+    private ResultResDto setResult(ResultResDto res, UserDto user){
+        res.setGender(user.getGender());
+        res.setBirthday(user.getBirthday());
+        res.setUserNm(user.getUserNm());
+        res.setPhoneNo(user.getPhoneNo());
+        return res;
     }
 }

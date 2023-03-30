@@ -32,6 +32,7 @@ public class AESCipher {
 
     // 암호화
     public String encrypt(String str) throws Exception {
+        System.out.println(str);
         Cipher c = Cipher.getInstance(algorithm);
         c.init(Cipher.ENCRYPT_MODE, this.secretKey, this.iv);
         return new String(Base64.encodeBase64(c.doFinal(str.getBytes(charset))));

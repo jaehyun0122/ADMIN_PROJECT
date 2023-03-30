@@ -2,6 +2,7 @@ package com.example.pass.dao;
 
 import com.example.pass.dto.ResultReqDto;
 import com.example.pass.dto.ResultResDto;
+import com.example.pass.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface PassDao {
     int insertAuthResult(ResultResDto resDto);
 
     List<ResultResDto> authResult(String certTxId);
+
+    UserDto getUserInfo(String certTxId);
 }
