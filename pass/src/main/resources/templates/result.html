@@ -6,6 +6,7 @@
 </head>
 <body>
     <table class="result">
+        <caption>결과 데이터</caption>
         <thead>
             <tr>
                 <th>reqTxId</th>
@@ -13,14 +14,14 @@
                 <th>certTxId</th>
                 <th>resultTycd</th>
                 <th>resultDttm</th>
-                <th>digitalSign</th>
-                <th>ci</th>
-                <th>복호화ci</th>
                 <th>telcoTycd</th>
                 <th>userNm</th>
                 <th>birthday</th>
                 <th>gender</th>
                 <th>phoneNo</th>
+                <th>ci</th>
+                <th>복호화ci</th>
+                <th>digitalSign</th>
             <tr>
         </thead>
         <tbody class="body">
@@ -35,10 +36,9 @@
             type: "GET",
             url: "/authResult",
             data: {
-                certTxId : localStorage.getItem("certTxId")
+                certTxId : sessionStorage.getItem("certTxId")
             },
             success: function (data){
-                console.log(data)
                 let tr = "";
                 data.map(info=>{
                     tr += `<tr>
@@ -47,14 +47,14 @@
                                 <td>${info.certTxId}</td>
                                 <td>${info.resultTycd}</td>
                                 <td>${info.resultDttm}</td>
-                                <td class="longTxt">${info.digitalSign}</td>
-                                <td class="longTxt">${info.CI}</td>
-                                <td class="longTxt">${info.decryptCi}</td>
                                 <td>${info.telcoTycd}</td>
                                 <td>${info.userNm}</td>
                                 <td>${info.birthday}</td>
                                 <td>${info.gender}</td>
                                 <td>${info.phoneNo}</td>
+                                <td class="longTxt">${info.CI}</td>
+                                <td class="longTxt">${info.decryptCi}</td>
+                                <td class="longTxt">${info.digitalSign}</td>
                             </tr>
                             `
                 })
@@ -72,6 +72,7 @@
         border: 2px solid brown;
         border-collapse: collapse;
         text-align: center;
+        margin: 50px;
     }
     th{
         border-bottom: 2px solid brown;
@@ -85,6 +86,14 @@
     }
     .longTxt{
         width: 1000px
+    }
+    thead{
+        position: sticky;
+        top: 0;
+    }
+    tbody{
+        overflow-y: scroll;
+        height: 300px;
     }
 
 </style>

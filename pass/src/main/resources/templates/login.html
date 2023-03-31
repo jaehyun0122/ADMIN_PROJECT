@@ -163,7 +163,7 @@ $(document).ready(function(){
 						url: "/join",
 						data: data,
 						success: function (data){
-							localStorage.setItem("certTxId", data)
+							sessionStorage.setItem("certTxId", data)
 							location.href = "moveJoin";
 						},
 						error: function (){

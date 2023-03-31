@@ -121,32 +121,32 @@
 
 
 <script>
-$(document).ready(function (){
-	let time = 300; // 초 단위
-	let min = 0;
-	let sec = 0;
-	// 5분뒤 인증시간 초과 알림
-	const interval = setInterval(timeAttack, 1000)
-	function timeAttack(){
-		min = parseInt(time/60);
-		sec = time%60;
-		time--;
-		if(time == -1){
-			clearInterval(interval);
-			$(".layer").css("display", "block")
-			$("span.deem").css("display", "block");
-		}
-		$(".time").html("유효시간 "+min.toString().padStart(2, '0')+":"+sec.toString().padStart(2,'0'))
-	}
-})
-
 	let isNext = false;
 	$(document).ready(function(){
+		// start 유효시간
+		let time = 300; // 초 단위
+		let min = 0;
+		let sec = 0;
+		// 5분뒤 인증시간 초과 알림
+		const interval = setInterval(timeAttack, 1000)
+		function timeAttack(){
+			min = parseInt(time/60);
+			sec = time%60;
+			time--;
+			if(time == -1){
+				clearInterval(interval);
+				$(".layer").css("display", "block")
+				$("span.deem").css("display", "block");
+			}
+			$(".time").html("유효시간 "+min.toString().padStart(2, '0')+":"+sec.toString().padStart(2,'0'))
+		}
+		// end 유효시간
+
 		$.ajax({
 			type: "GET",
 			url: "/result",
 			data: {
-				certTxId : localStorage.getItem("certTxId")
+				certTxId : sessionStorage.getItem("certTxId")
 			},
 			success: function (data){
 				alert("인증 완료 후 다음 버튼 눌러주세요")
@@ -171,7 +171,7 @@ $(document).ready(function (){
 			type: "GET",
 			url: "/result",
 			data: {
-				certTxId : localStorage.getItem("certTxId")
+				certTxId : sessionStorage.getItem("certTxId")
 			},
 			success: function (data){
 				if(data['resultTycd'] == 1){

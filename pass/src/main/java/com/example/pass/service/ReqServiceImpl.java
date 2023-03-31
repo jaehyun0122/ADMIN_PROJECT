@@ -5,7 +5,6 @@ import com.example.pass.dto.ReqDto;
 import com.example.pass.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -26,7 +25,6 @@ public class ReqServiceImpl implements ReqService{
     private static final String companyCd = "90001";
     private static final String bear = "AT-111111";
     private static final AESCipher aesCipher = new AESCipher("YzNmOGQ2OGI1ZDEwNDA5YmJmZmRhMTI5");
-    private final SqlSession sqlSession;
     private final String reqUrl = "https://api-stg.passauth.co.kr/v1/certification/notice";
     @Override
     public ReqDto getReq(UserDto userDto) {
@@ -40,11 +38,6 @@ public class ReqServiceImpl implements ReqService{
     public String deAes(String str) throws Exception {
         return aesCipher.decrypt(str);
     }
-//    @Override
-//    public int insertAuth(Map<String, Object> map) {
-//        sqlSession.getMapper(PassDao.class).insertAuth(map);
-//        return 0;
-//    }
 
     /**
      * body, 메소드, url
@@ -102,7 +95,7 @@ public class ReqServiceImpl implements ReqService{
         }
 
         // birthday 변환 1995 => 95
-        userDto.setBirthday(userDto.getBirthday().substring(2,userDto.getBirthday().length()));
+        userDto.setBirthday(userDto.getBirthday().substring(2));
 
         // 암호화 ( phoneNo, userNm, birthday, gender )
         try {
@@ -212,7 +205,6 @@ public class ReqServiceImpl implements ReqService{
             }
             connection.connect();
             // end 요청
-            System.out.println(json);
             // start response
             br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             String line;

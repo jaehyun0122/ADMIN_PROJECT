@@ -1,6 +1,5 @@
 package com.example.pass.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -43,5 +42,9 @@ public class ResultResDto {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public void setTelcoTycd(String telcoTycd) {
+        this.telcoTycd = telcoTycd;
     }
 }

@@ -7,6 +7,7 @@ import com.example.pass.service.ReqServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
+@Log4j2
 @RequiredArgsConstructor
 public class MainController {
     private final ReqServiceImpl reqService;
@@ -51,6 +52,7 @@ public class MainController {
     @GetMapping
     @ResponseBody
     public ReqDto info(UserDto userDto){
+       log.info("요청 유저 정보 {}", userDto);
         return reqService.getReq(userDto);
     }
 
@@ -59,6 +61,7 @@ public class MainController {
     public String join(ReqDto reqDto) throws JsonProcessingException {
         reqDto.setOriginalInfo(null);
 
+        log.info("cerTxId, reqTxId 요청 정보 {}", reqDto);
         // 응답 결과 변환
         ObjectMapper om = new ObjectMapper();
         ResDto resDto = om.readValue(reqService.getRes(reqDto, "POST", authUrl).toString(), ResDto.class);
@@ -75,12 +78,19 @@ public class MainController {
     @GetMapping("result")
     @ResponseBody
     public ResultResDto result(@RequestParam String certTxId) throws IOException, ParseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        log.info("검증 결과 요청 후 db 저장");
         ObjectMapper om = new ObjectMapper();
         // 검증 결과 요청 파라미터
         // certTxId로 검증 결과 요청 파라미터 가져옴
         ResultReqDto resultReqDto = passDao.resultReq(certTxId);
+
         // 검증 결과 요청 파리미터에 대한 응답 DB에 저장
         ResultResDto resDto = om.readValue(reqService.getRes(resultReqDto, "POST", resultUrl).toString(), ResultResDto.class);
+
+        log.info("검증 결과 요청 파라미터 {}", resultReqDto);
+        // 검증 결과 요청 파리미터에 대한 응답 DB에 저장
+        log.info("검증 결과 응답 데이터 {}", resDto);
+
         passDao.insertAuthResult(resDto);
 
         return resDto;
@@ -89,21 +99,39 @@ public class MainController {
     @GetMapping("authResult")
     @ResponseBody
     public List<ResultResDto> authResult(@RequestParam String certTxId) throws Exception {
+        log.info("검증 결과 db에 요청");
         List<ResultResDto> authResult = passDao.authResult(certTxId);
-        // ci 복호하
         UserDto userInfo = setUserInfo(passDao.getUserInfo(certTxId));
+        // ci 복호화, 성별 0~9 => 남( 홀수 ) or 여( 짝수 )
+        authResult = convertResult(authResult, userInfo, certTxId);
+
+        return authResult;
+    }
+
+
+    private List<ResultResDto> convertResult(List<ResultResDto> authResult, UserDto userInfo, String certTxId) throws NoSuchPaddingException, IllegalBlockSizeException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         for(ResultResDto res : authResult){
             res = setResult(res, userInfo);
             if("1".equals(res.getResultTycd()) && certTxId.equals(res.getCertTxId())){
                 RsaDecrypt rsaDecrypt = new RsaDecrypt(res.getCi());
                 res.setDecryptCi(rsaDecrypt.ciDecryption());
             }
-        }
 
+            if(Integer.parseInt(res.getGender()) % 2 == 0){
+                res.setGender("여");
+            }else res.setGender("남");
+
+            if("S".equals(res.getTelcoTycd())){
+                res.setTelcoTycd("SKT");
+            }else if("K".equals(res.getTelcoTycd())){
+                res.setTelcoTycd("KT");
+            }else if("L".equals(res.getTelcoTycd())){
+                res.setTelcoTycd("LGU+");
+            }
+        }
 
         return authResult;
     }
-
 
     private UserDto setUserInfo(UserDto userInfo) throws Exception {
         userInfo.setUserNm(reqService.deAes(userInfo.getUserNm()));
