@@ -29,7 +29,7 @@ public class ErrorResponse {
 
         if("필수항목".equals(errorMessage)){
             this.errorMessage = "필수항목 " + leakBody + "이 누락되었습니다.";
-        }else{
+        }else if("유효".equals(errorMessage)){
             this.errorMessage = leakBody + " 값이 유효하지 않습니다.";
         }
     }

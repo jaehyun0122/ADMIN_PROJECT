@@ -21,22 +21,4 @@ public enum ErrorInfoEnum {
         this.httpStatus = httpStatus;
     }
 
-//    ErrorInfo(int errorCd, String errorMessage, String category, String errorPointCd, int httpStatus){
-//        this.errorCd = errorCd;
-//        this.errorPointCd = errorPointCd;
-//        this.httpStatus = httpStatus;
-//        if(errorMessage.equals("필수항목")){
-//            this.errorMessage = "필수항목 " + category + "이 누락되었습니다.";
-//        }else{
-//            this.errorMessage = category + " 값이 유효하지 않습니다.";
-//        }
-//    }
-
-//    private String makeMandatoryErrorMessage(List<String> leakCategoryList){
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("필수항목");
-//        for(String mandatory : leakCategoryList){
-//            sb.append(mandatory)
-//        }
-//    }
 }
