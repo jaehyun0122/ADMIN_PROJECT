@@ -1,10 +1,15 @@
 package com.example.apiserver.service;
 
-import java.util.List;
-import java.util.Map;
+import com.example.apiserver.dto.AuthReqInfoDto;
+import com.example.apiserver.dto.AuthResInfoDto;
+
 
 public interface AuthService {
-    boolean headerCheck(String requestHeader);
+    String headerCheck(String requestHeader);
 
-    String authBodyCheck(Map<String, String> body);
+    boolean authBodyCheck(AuthReqInfoDto body);
+    AuthReqInfoDto bodyValidCheck(AuthReqInfoDto body, String key) throws Exception;
+
+    AuthResInfoDto getAuthResponse(AuthReqInfoDto decryptAuthReqInfo);
+
 }

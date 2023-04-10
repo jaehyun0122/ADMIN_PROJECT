@@ -121,8 +121,8 @@
 
 
 <script>
-	let isNext = false;
-	$(document).ready(function(){
+
+$(document).ready(function(){
 		// start 유효시간
 		let time = 300; // 초 단위
 		let min = 0;
@@ -143,7 +143,7 @@
 		// end 유효시간
 
 		$.ajax({
-			type: "GET",
+			type: "POST",
 			url: "/result",
 			data: {
 				certTxId : sessionStorage.getItem("certTxId")
@@ -151,38 +151,55 @@
 			success: function (data){
 				alert("인증 완료 후 다음 버튼 눌러주세요")
 			},
-			error: function (){
-				alert("전자서명 error")
+			error: function (error){
+				alert(error.responseJSON.errorMessage)
+				location.href = "login";
 			}
 		}) // end ajax
 
 	})
 
-	$(".ok").click(function (){
-		if(isNext){
-			location.href = "showData"
-		}else{
-			alert("인증을 완료해주세요")
-		}
-	})
-
 	$(".again").click(function (){
 		$.ajax({
-			type: "GET",
+			type: "POST",
+			url: "/again",
+			data: {
+				certTxId : sessionStorage.getItem("certTxId")
+			},
+			success: function (data){
+				sessionStorage.setItem("certTxId", data)
+				alert("인증 완료 후 다음 버튼 눌러주세요")
+			},
+			error: function (error){
+				if(error.responseJSON){
+					alert(error.responseJSON.errorMessage)
+				}else{
+					console.log(error)
+				}
+			}
+		}) // end ajax
+	})
+
+	$(".ok").click(function (){
+		$.ajax({
+			type: "POST",
 			url: "/result",
 			data: {
 				certTxId : sessionStorage.getItem("certTxId")
 			},
 			success: function (data){
 				if(data['resultTycd'] == 1){
-					isNext = true;
-					alert("인증완료! 다음 버튼 눌러주세요")
+					location.href = "showData"
 				}else{
 					alert("인증을 완료해주세요")
 				}
 			},
-			error: function (){
-				alert("전자서명 error")
+			error: function (error){
+				if(error.responseJSON){
+					alert(error.responseJSON.errorMessage)
+				}else{
+					console.log(error)
+				}
 			}
 		}) // end ajax
 	})

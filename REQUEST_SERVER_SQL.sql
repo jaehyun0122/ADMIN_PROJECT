@@ -33,8 +33,9 @@ CREATE TABLE IF NOT EXISTS `auth_result` (
   `gender` varchar(40) DEFAULT NULL,
   `phoneNo` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 
 -- 테이블 pass.req_info 구조 내보내기
 CREATE TABLE IF NOT EXISTS `req_info` (
@@ -45,10 +46,10 @@ CREATE TABLE IF NOT EXISTS `req_info` (
   `agencyCd` varchar(2) DEFAULT NULL,
   `serviceTycd` varchar(5) NOT NULL,
   `telcoTycd` varchar(1) NOT NULL,
-  `phoneNo` varchar(40) NOT NULL,
-  `userNm` varchar(300) NOT NULL,
-  `birthday` varchar(40) NOT NULL,
-  `gender` varchar(40) NOT NULL,
+  `phoneNo` varchar(40) NOT NULL DEFAULT '',
+  `userNm` varchar(300) NOT NULL DEFAULT '',
+  `birthday` varchar(40) NOT NULL DEFAULT '',
+  `gender` varchar(40) NOT NULL DEFAULT '',
   `reqTitle` varchar(50) NOT NULL,
   `reqContent` varchar(500) DEFAULT NULL,
   `reqCSPhoneNo` varchar(12) NOT NULL,
@@ -65,9 +66,48 @@ CREATE TABLE IF NOT EXISTS `req_info` (
   `isCombineAuth` varchar(1) DEFAULT 'Y',
   `certTxId` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 
+-- 테이블 pass.rsa 구조 내보내기
+CREATE TABLE IF NOT EXISTS `rsa` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `decryptKey` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+INSERT INTO rsa(decryptKey) VALUES 
+('-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCYjuG3lehPD7m1
+W/jRMJjse/8Oqi+BG6KKOqsENRTv5DFDE1xywry/IkLOhx5C0ViuIPpbcjunhC3S
+6/1L9dlx03ShrSwut56FFwL3TuLGNPxRsVZnahZ+rzmmYQRRIXkvDO2oCvsQ/+tH
+6Jrak9zgkbMBKm+W+Wey4B1HLNKiLR7pUJvgF3XDdgIwchoJ2cPCSRqqc7+9uLXN
+Pya1LG8s0sGTzj49jwqRFo4ksTNpUyIKoX87yYW9AO/u81xqXWxoMG5i+AWhUkxy
+IwcTDmVAQAcNsZGFtCCNgSrRURpMXXwn4RDfElKTs0Vu7SSR/nTcKLeGvAvJX0ja
+gzDLbUq3AgMBAAECggEANQqoi+4BAUwUY2wAzKq64K4T9gNR1O/IyYqwXxwdlXKf
+dhTLNdNjUIkW9TuhV9X1oUUyBo1nFE0uqYEHZluqKJs+l9/f1rZc1SU1EMtKqWNO
+vxCLXBVUkONXhfOBTrv2qFc0YhK/TB/OrAfBn3F9gE7oD+WzOqioV1b4lwCMk3nV
+peTECckbpwaXhYrU7AYkWEAXaL27pF/2FbD09O/UBKblK2Ix0aN3fhnseKZl5kGu
+qM2NdtfoFS6tK5Kd8nekiBRCXyopZRCep5B/iUS+vcIYxHz+qIWjNrcluPoi+DIo
+ZXCUmH50ZEkkNq7zdfTQEUkmYsUovWaKdVK66mw6MQKBgQDlp0ptOpqjPZRU+4I0
+dEtqR1ECUFU59wQXVEHOxeluYSKbisH1z8u7LCghmW89vhFLWolZRplEgCfJ4jzk
+lcDVFkF0HMYCKAVL0k3Gv/DYcCqBen9VECHSaYtAnA6OcwZze+8rVAjipLDdN531
+2qzUzFMePnBfTiymMj7niZW4bQKBgQCqD19MevYqlMbAX0Q4pVzpWdfxyMVVx3lW
+kp26BF/pQ6USqcKXKlDyqmo6F69cDp+67ppyzO3vhlbAalMtx6aw+91g7GCFIlHK
+rAVv2ejQIIocxMSAqTQ/wXiHF30mAvEPA0CKgVzs8rMgprmCNEVmvWxl8IK7CRTA
+f7e2J/GhMwKBgQCQ0h4tI3fA2WRg8vn4+h1UuARt4RrdotgBnjChpEzAPqEEVUxb
+Jt7i+cWU6p0r4mAllMJoegzNFcQBm5mqzIT92zsLbdmwImy0k7pYS1ImKxWi8Qy7
+J6Esf0JBTCghzIeU6+K3ABdaVWDzH8+M6oly6CbCO73BXBrr82OXvzubQQKBgFaE
+p5lDXYXgVxV74jtnddOKT+DEohC4ATVYNkJzA1Crh4ntMAC0GKa8qHqRnjeZgQ4b
+YhxRwiOAFxahgVvjHR0hpkkvORPCmBYiWknDdTydsWZdfRNwAhMFnQotmxABox5e
+KzHMCrjJ6PQNnodtjHlumX1rVTdOsW4WDCLyQ24dAoGBAOFrfIv6cp1KiTTjvhTM
+dbR1CT47fon4W3NTAgy11N3iFfeyg0FBJiVsE7qxUaeqbfpvFGGvG3kSW1+X57tK
+bVS3EohfYKDBy1kKBruUDc65vsC0wcDzMeGZVZwivaSZ+6JlW/VsMAO2WowhLISU
+xOcr5QXDUENDFQo+Z52Si62M
+-----END PRIVATE KEY-----'
+)
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,4 +1,4 @@
-package com.example.pass.key;
+package com.example.apiserver.key;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;

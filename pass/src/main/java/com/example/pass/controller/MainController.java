@@ -1,38 +1,27 @@
 package com.example.pass.controller;
 
-import com.example.pass.dao.PassDaoImpl;
 import com.example.pass.dto.*;
-import com.example.pass.key.RsaDecrypt;
 import com.example.pass.service.ReqServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Log4j2
 @RequiredArgsConstructor
 public class MainController {
     private final ReqServiceImpl reqService;
-    private final PassDaoImpl passDao;
-    private final String authUrl = "https://api-stg.passauth.co.kr/v1/certification/notice";
-    private final String resultUrl = "https://api-stg.passauth.co.kr/certification/result";
+    @Value("${url.authUrl}")
+    private String authUrl;
+    @Value("${url.resultUrl}")
+    private String resultUrl;
 
     @GetMapping("login")
     public String login(){
@@ -49,50 +38,63 @@ public class MainController {
         return "join";
     }
 
-    @GetMapping
+    @PostMapping
     @ResponseBody
     public ReqDto info(UserDto userDto){
        log.info("요청 유저 정보 {}", userDto);
         return reqService.getReq(userDto);
     }
 
-    @GetMapping("join")
+    @PostMapping("join")
     @ResponseBody
-    public String join(ReqDto reqDto) throws JsonProcessingException {
+    public String join(ReqDto reqDto) throws Exception {
         reqDto.setOriginalInfo(null);
 
-        log.info("cerTxId, reqTxId 요청 정보 {}", reqDto);
+        log.info(">>> 인증 요청 정보 {}", reqDto);
         // 응답 결과 변환
-        ObjectMapper om = new ObjectMapper();
-        ResDto resDto = om.readValue(reqService.getRes(reqDto, "POST", authUrl).toString(), ResDto.class);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("ReqDto", reqDto);
-        map.put("ResDto", resDto); // certTxId, reqTxId
-
-        passDao.insertAuth(map);
-
+        ResDto resDto = reqService.getResDto(reqDto, "POST", authUrl);
+        log.info("인증 요청 응답 결과 {}", resDto);
+        // insert
+        reqService.insertAuth(reqDto, resDto);
+        log.info("<<< 인증 요청");
         return resDto.getCertTxId();
     }
 
-    @GetMapping("result")
+    @PostMapping("again")
     @ResponseBody
-    public ResultResDto result(@RequestParam String certTxId) throws IOException, ParseException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+    public String againReq(@RequestParam String certTxId) throws Exception {
+        log.info(">>> 다시 요청");
+        ReqDto reqDto = reqService.againReq(certTxId);
+        reqDto.setOriginalInfo(null);
+
+        // userNm, phoneNo, gender, birthday 복호화 해서 전달
+        reqDto = reqService.decryptInfo(reqDto);
+        log.info("다시 요청 정보 {}", reqDto);
+        ResDto resDto = reqService.getResDto(reqDto, "POST", authUrl);
+        // insert
+        reqService.insertAuth(reqDto, resDto);
+        log.info("<<< 다시 요청");
+        return resDto.getCertTxId();
+    }
+
+    @PostMapping("result")
+    @ResponseBody
+    public ResultResDto result(@RequestParam String certTxId) throws Exception {
+        log.info(">>> 검증 결과 요청");
         log.info("검증 결과 요청 후 db 저장");
-        ObjectMapper om = new ObjectMapper();
         // 검증 결과 요청 파라미터
         // certTxId로 검증 결과 요청 파라미터 가져옴
-        ResultReqDto resultReqDto = passDao.resultReq(certTxId);
+        ResultReqDto resultReqDto = reqService.resultReq(certTxId);
 
         // 검증 결과 요청 파리미터에 대한 응답 DB에 저장
-        ResultResDto resDto = om.readValue(reqService.getRes(resultReqDto, "POST", resultUrl).toString(), ResultResDto.class);
+        ResultResDto resDto = reqService.getResultResDto(resultReqDto, "POST", resultUrl);
 
         log.info("검증 결과 요청 파라미터 {}", resultReqDto);
         // 검증 결과 요청 파리미터에 대한 응답 DB에 저장
         log.info("검증 결과 응답 데이터 {}", resDto);
+        reqService.insertAuthResult(resDto);
 
-        passDao.insertAuthResult(resDto);
-
+        log.info("<<< 검증 결과 요청");
         return resDto;
     }
 
@@ -100,52 +102,13 @@ public class MainController {
     @ResponseBody
     public List<ResultResDto> authResult(@RequestParam String certTxId) throws Exception {
         log.info("검증 결과 db에 요청");
-        List<ResultResDto> authResult = passDao.authResult(certTxId);
-        UserDto userInfo = setUserInfo(passDao.getUserInfo(certTxId));
+        List<ResultResDto> authResult = reqService.authResult(certTxId);
+        UserDto userInfo = reqService.setUserInfo(reqService.getUserInfo(certTxId));
         // ci 복호화, 성별 0~9 => 남( 홀수 ) or 여( 짝수 )
-        authResult = convertResult(authResult, userInfo, certTxId);
+        authResult = reqService.convertResult(authResult, userInfo, certTxId);
 
         return authResult;
     }
 
 
-    private List<ResultResDto> convertResult(List<ResultResDto> authResult, UserDto userInfo, String certTxId) throws NoSuchPaddingException, IllegalBlockSizeException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        for(ResultResDto res : authResult){
-            res = setResult(res, userInfo);
-            if("1".equals(res.getResultTycd()) && certTxId.equals(res.getCertTxId())){
-                RsaDecrypt rsaDecrypt = new RsaDecrypt(res.getCi());
-                res.setDecryptCi(rsaDecrypt.ciDecryption());
-            }
-
-            if(Integer.parseInt(res.getGender()) % 2 == 0){
-                res.setGender("여");
-            }else res.setGender("남");
-
-            if("S".equals(res.getTelcoTycd())){
-                res.setTelcoTycd("SKT");
-            }else if("K".equals(res.getTelcoTycd())){
-                res.setTelcoTycd("KT");
-            }else if("L".equals(res.getTelcoTycd())){
-                res.setTelcoTycd("LGU+");
-            }
-        }
-
-        return authResult;
-    }
-
-    private UserDto setUserInfo(UserDto userInfo) throws Exception {
-        userInfo.setUserNm(reqService.deAes(userInfo.getUserNm()));
-        userInfo.setGender(reqService.deAes(userInfo.getGender()));
-        userInfo.setBirthday(reqService.deAes(userInfo.getBirthday()));
-        userInfo.setPhoneNo(reqService.deAes(userInfo.getPhoneNo()));
-        return userInfo;
-    }
-
-    private ResultResDto setResult(ResultResDto res, UserDto user){
-        res.setGender(user.getGender());
-        res.setBirthday(user.getBirthday());
-        res.setUserNm(user.getUserNm());
-        res.setPhoneNo(user.getPhoneNo());
-        return res;
-    }
 }

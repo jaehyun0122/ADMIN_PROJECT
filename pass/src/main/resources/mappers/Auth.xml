@@ -101,4 +101,14 @@
         from req_info
         where certTxId like #{certTxId}
     </select>
+
+    <select id="againReq" parameterType="string" resultType="ReqDto">
+        select * from req_info
+        where certTxId like #{certTxId}
+    </select>
+
+    <select id="getRsaKey" parameterType="int" resultType="string">
+        select decryptKey from rsa
+        where id = #{id}
+    </select>
 </mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.apiserver.dao.AuthDao">
+    <resultMap id="originalInfoMap" type="com.example.apiserver.dto.AuthReqInfoDto">
+        <result property="originalInfo" column="originalInfo" typeHandler="com.example.apiserver.typehandler.OriginalInfoTypeHandler"></result>
+    </resultMap>
+
+    <select id="getUserInfo" parameterType="string" resultType="UserDto">
+        SELECT
+            CAST(AES_DECRYPT(userNm, 'mykey') as CHAR) as userNm,
+            AES_DECRYPT(phoneNo, 'mykey') as phoneNo,
+            AES_DECRYPT(birthday, 'mykey') as birthday,
+            AES_DECRYPT(gender, 'mykey') as gender,
+            telcoTycd
+        FROM user
+        WHERE AES_DECRYPT(phoneNo, 'mykey') LIKE #{phoneNo}
+    </select>
+
+    <insert id="insertAuthReqInfo" parameterType="AuthReqInfoDto">
+        insert into api_auth_req_info(
+             companyCd
+            ,channelTycd
+            ,channelNm
+            ,agencyCd
+            ,serviceTycd
+            ,telcoTycd
+            ,phoneNo
+            ,userNm
+            ,birthday
+            ,gender
+            ,reqTitle
+            ,reqContent
+            ,reqCSPhoneNo
+            ,reqEndDttm
+            ,isNotification
+            ,isPASSVerify
+            ,signTargetTycd
+            ,signTarget
+            ,isUserAgreement
+            ,originalInfo
+            ,isDigitalSign
+            ,isCombineAuth
+            ,reqTxId
+            )values (
+              #{companyCd}
+             ,#{channelTycd}
+             ,#{channelNm}
+             ,#{agencyCd}
+             ,#{serviceTycd}
+             ,#{telcoTycd}
+             ,AES_ENCRYPT(#{phoneNo}, 'mykey')
+             ,AES_ENCRYPT(#{userNm}, 'mykey')
+             ,AES_ENCRYPT(#{birthday}, 'mykey')
+             ,AES_ENCRYPT(#{gender}, 'mykey')
+             ,#{reqTitle}
+             ,#{reqContent}
+             ,#{reqCSPhoneNo}
+             ,#{reqEndDttm}
+             ,#{isNotification}
+             ,#{isPASSVerify}
+             ,#{signTargetTycd}
+             ,#{signTarget}
+             ,#{isUserAgreement}
+             ,#{originalInfo, typeHandler=com.example.apiserver.typehandler.OriginalInfoTypeHandler, jdbcType=VARCHAR}
+             ,#{isDigitalSign}
+             ,#{isCombineAuth}
+            ,#{reqTxId}
+             )
+    </insert>
+
+    <insert id="insertAuthResInfo" parameterType="AuthReqInfoDto">
+        insert into api_auth_req_info(
+                                      companyCd
+                                     ,channelTycd
+                                     ,channelNm
+                                     ,agencyCd
+                                     ,serviceTycd
+                                     ,telcoTycd
+                                     ,phoneNo
+                                     ,userNm
+                                     ,birthday
+                                     ,gender
+                                     ,reqTitle
+                                     ,reqContent
+                                     ,reqCSPhoneNo
+                                     ,reqEndDttm
+                                     ,isNotification
+                                     ,isPASSVerify
+                                     ,signTargetTycd
+                                     ,signTarget
+                                     ,isUserAgreement
+                                     ,originalInfo
+                                     ,isDigitalSign
+                                     ,isCombineAuth
+                                     ,reqTxId
+                                     ,certTxId
+        )values (
+                    #{companyCd}
+                ,#{channelTycd}
+                ,#{channelNm}
+                ,#{agencyCd}
+                ,#{serviceTycd}
+                ,#{telcoTycd}
+                ,AES_ENCRYPT(#{phoneNo}, 'mykey')
+                ,AES_ENCRYPT(#{userNm}, 'mykey')
+                ,AES_ENCRYPT(#{birthday}, 'mykey')
+                ,AES_ENCRYPT(#{gender}, 'mykey')
+                ,#{reqTitle}
+                ,#{reqContent}
+                ,#{reqCSPhoneNo}
+                ,#{reqEndDttm}
+                ,#{isNotification}
+                ,#{isPASSVerify}
+                ,#{signTargetTycd}
+                ,#{signTarget}
+                ,#{isUserAgreement}
+                ,#{originalInfo, typeHandler=com.example.apiserver.typehandler.OriginalInfoTypeHandler, jdbcType=VARCHAR}
+                ,#{isDigitalSign}
+                ,#{isCombineAuth}
+                ,#{reqTxId}
+                ,#{certTxId}
+                )
+    </insert>
+
+    <select id="getKey" parameterType="string" resultType="string">
+        select auth_key from auth where token like #{token}
+    </select>
+</mapper>

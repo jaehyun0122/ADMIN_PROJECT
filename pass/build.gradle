@@ -24,6 +24,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-devtools'
 
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
@@ -35,6 +37,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
+
+    implementation 'org.apache.httpcomponents:httpclient:4.5'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

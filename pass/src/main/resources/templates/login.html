@@ -36,21 +36,9 @@
 					</div>
 					<div class="input_row"><!-- 오류시 error 추가 -->
 						<div class="col">
-							<span><input type="tel" id="birthday" class="form_control" maxlength="8" placeholder="생년월일 예) 19950122" autocomplete="off"></span>
+							<span><input type="tel" id="birthday" class="form_control" maxlength="7" placeholder="주민등록번호 앞 7자리 예) 9501221" autocomplete="off"></span>
 						</div>
 						<p id="birthErr" class="error_txt">생년월일을 바르게 입력해주세요. 잘못된 문자가 포함되어 있습니다.</p>
-					</div>
-					<div class="input_row"><!-- 오류시 error 추가 -->
-						<div class="col" style="width: 20px">
-							<span>
-								<select name="gender" id="gender">
-									<option disabled selected >성별</option>
-									<option value="남">남</option>
-									<option value="여">여</option>
-								</select>
-							</span>
-						</div>
-						<p id="genderErr" class="error_txt">!<span>성별을 체크해주세요.</span></p>
 					</div>
 					<div class="input_row telecom">
 						<ul class="radio">
@@ -144,35 +132,35 @@ $(document).ready(function(){
 	// 다음 버튼 클릭
 	$(".ok").click(function (){
 		// 입력값 체크
-		if(nameCheck() && birthCheck() && genderCheck() && phoneNumCheck()){
+		if(nameCheck() && birthCheck() && phoneNumCheck()){
 			let params = {
 				userNm : $("#name").val(),
 				birthday : $("#birthday").val(),
 				telcoTycd: $('input[name="telCdRadio"]:checked').val(),
 				phoneNo: $("#phone_num").val(),
-				gender: $("#gender").val()
 			}
 
 			$.ajax({
-				type: "GET",
+				type: "POST",
 				url : "/",
 				data: params,
 				success: function(data){
 					$.ajax({
-						type: "GET",
+						type: "POST",
 						url: "/join",
 						data: data,
 						success: function (data){
 							sessionStorage.setItem("certTxId", data)
 							location.href = "moveJoin";
 						},
-						error: function (){
-							alert("join error")
+						error: function (error){
+							alert(error.responseJSON.errorMessage)
+							location.href = "login";
 						}
 					})
 				},
-				error:function(){
-					alert("login error")
+				error:function(error){
+					alert(error.responseJSON.errorMessage)
 				}
 			}) // end ajax
 		} // end 입력값 체크
@@ -183,7 +171,7 @@ $(document).ready(function(){
  	 */
 	// 이름 ( name, 한글만 )
 	function nameCheck(){
-		let korReg = /^[ㄱ-ㅎ|가-힣]+$/
+		let korReg = /^[가-힣]+$|^[a-zA-z\s]+$/
 		if(!korReg.test($("#name").val())){
 			$("#nameErr").css("display", "inline")
 			$("#name").focus()
@@ -195,7 +183,7 @@ $(document).ready(function(){
 	}
 	// 생년월일 ( birthday, 숫자 8자리 )
 	function birthCheck(){
-		let birthReg = /^[0-9]{8}/
+		let birthReg = /^[0-9]{7}/
 		if(!birthReg.test($("#birthday").val())) {
 			$("#birthErr").css("display", "inline")
 			$("#birthday").focus()
@@ -206,16 +194,16 @@ $(document).ready(function(){
 		}
 	}
 	// 성별 ( gender, 남 또는 여 체크 확인 )
-	function genderCheck(){
-		if($("select[name='gender']").val() == null){
-			$("#genderErr").css("display", "inline")
-			$("#gender").focus()
-			return false;
-		}else{
-			$("#genderErr").css("display", "none")
-			return true;
-		}
-	}
+	// function genderCheck(){
+	// 	if($("select[name='gender']").val() == null){
+	// 		$("#genderErr").css("display", "inline")
+	// 		$("#gender").focus()
+	// 		return false;
+	// 	}else{
+	// 		$("#genderErr").css("display", "none")
+	// 		return true;
+	// 	}
+	// }
 	// 휴대폰 번호 ( phone_num, 숫자 11 자리 )
 	function phoneNumCheck(){
 		let phoneReg = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;

@@ -1,5 +1,6 @@
 package com.example.pass.dao;
 
+import com.example.pass.dto.ReqDto;
 import com.example.pass.dto.ResultReqDto;
 import com.example.pass.dto.ResultResDto;
 import com.example.pass.dto.UserDto;
@@ -19,4 +20,8 @@ public interface PassDao {
     List<ResultResDto> authResult(String certTxId);
 
     UserDto getUserInfo(String certTxId);
+
+    ReqDto againReq(String certTxId);
+
+    String getRsaKey(int id);
 }

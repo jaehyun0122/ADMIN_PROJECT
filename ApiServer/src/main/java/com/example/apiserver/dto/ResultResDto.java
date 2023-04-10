@@ -1,31 +1,48 @@
-package com.example.pass.dto;
+package com.example.apiserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
+@ToString
+@NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultResDto {
     private String reqTxId;
-    private String telcoTxId;
-    private String certTxId;
     private String resultTycd;
-    private String resultDttm;
     private String digitalSign;
     @JsonProperty("CI")
     private String ci;
+    private String telcoTxId;
+    private String certTxId;
+    private String resultDttm;
     private String userNm;
     private String birthday;
     private String gender;
     private String phoneNo;
     private String telcoTycd;
-    private String decryptCi;
 
-    public void setDecryptCi(String decryptCi) {
-        this.decryptCi = decryptCi;
+    public void setResultTycd(String resultTycd) {
+        this.resultTycd = resultTycd;
+    }
+
+    public void setDigitalSign(String digitalSign) {
+        this.digitalSign = digitalSign;
+    }
+
+    public void setCi(String ci) {
+        this.ci = ci;
+    }
+
+    public void setTelcoTxId(String telcoTxId) {
+        this.telcoTxId = telcoTxId;
+    }
+
+    public void setResultDttm(String resultDttm) {
+        this.resultDttm = resultDttm;
     }
 
     public void setUserNm(String userNm) {
@@ -42,9 +59,5 @@ public class ResultResDto {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
-    }
-
-    public void setTelcoTycd(String telcoTycd) {
-        this.telcoTycd = telcoTycd;
     }
 }

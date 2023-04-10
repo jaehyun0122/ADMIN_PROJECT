@@ -1,11 +1,16 @@
-package com.example.pass.dto;
+package com.example.apiserver.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 @Getter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class ReqDto {
+public class AuthReqInfoDto {
     private String companyCd;
     private String channelTycd;
     private String channelNm;
@@ -25,14 +30,11 @@ public class ReqDto {
     private String signTargetTycd;
     private String signTarget;
     private String isUserAgreement;
-    private String originalInfo;
+    private OriginalInfo originalInfo;
     private String reqTxId;
+    private String certTxId;
     private String isDigitalSign;
     private String isCombineAuth;
-
-    public void setOriginalInfo(String originalInfo) {
-        this.originalInfo = originalInfo;
-    }
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
@@ -50,7 +52,7 @@ public class ReqDto {
         this.gender = gender;
     }
 
-    public void setSignTarget(String signTarget) {
-        this.signTarget = signTarget;
+    public void setCertTxId(String certTxId) {
+        this.certTxId = certTxId;
     }
 }
