@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<header class="header" style="height: 96px;">
+    <div class="inner">
+        <h1>스탁</h1>
+        <div class="util-btn back"><button type="button" th:onclick="window.history.back()"><span>이전</span></button></div>
+        <div class="util-btn close"><button type="button"><span>닫기</span></button></div>
+        <ul class="gnb">
+            <li th:each="head : ${stockHeadList}"><a href="#g" th:text="${head}"></a></li>
+        </ul>
+    </div>
+</header>
+</body>
+</html>

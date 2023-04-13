@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="common/head :: fragmentHead"/>
+	<script src="/js/slick.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+
+	<th:block th:replace="layer/header :: header"></th:block>
+
+
+	<div class="container_wrap">
+
+		<section class="container">
+
+			<div class="content_wrap">
+
+				<div class="pageTit">공지사항</div>
+
+				<div class="board_wrap">
+					<div class="board_view">
+						<div class="board_title">
+							<div class="inner">
+								<h2 th:text="${detailInfo.title}"></h2>
+								<span class="date" th:text="${detailInfo.reg_date}"></span>
+							</div>
+						</div><!-- // board_title -->
+
+						<div class="board_content" th:utext="${detailInfo.content.replaceAll('\n', '<br>')}">
+
+						</div><!-- // board_content -->
+					</div><!-- // board_view -->
+
+					<button type="buton" id="moveNoticeList" th:onclick="|location.href='@{/customer/officialInfo}'|">목록</button>
+				</div><!-- // board_wrap -->
+
+			</div>
+			
+		</section><!-- // container -->
+		
+	</div><!-- // container_wrap -->
+
+
+	<th:block th:include="/layer/footer"></th:block>
+	
+</div><!-- // wrap -->
+
+<!-- <script src="../../js/slick.js"></script> -->
+<script src="../../js/temp.js"></script>
+<style>
+	#moveNoticeList{
+		display: block;
+		width: 100%;
+		height: 44px;
+		background-color: #fff;
+		border: 1px solid #137986;
+		border-radius: 4px;
+		color: #137986;
+		font-size: 16px;
+		font-weight: 500;
+	}
+</style>
+</body>
+</html>

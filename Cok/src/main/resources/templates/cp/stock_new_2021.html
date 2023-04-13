@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>stock_new_2021</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+	<meta name="description" content="설명설명설명">
+
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="타이틀타이틀">
+	<meta property="og:description" content="설명설명설명">
+	<meta property="og:image" content="/images/common/stock_meta.png">
+	<meta property="og:url" content="https://www.www.www.www/">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="타이틀타이틀">
+	<meta name="twitter:description" content="설명설명설명">
+	<meta name="twitter:image" content="/images/common/logo_stock.png">
+	<meta name="twitter:domain" content="https://www.www.www.www/">
+
+	<link rel="stylesheet" href="/css/stock_new_2021/reset.css">
+	<link rel="stylesheet" href="/css/stock_new_2021/common.css">
+	<link rel="stylesheet" href="/css/stock_new_2021/stock_new.css">
+	<link rel="stylesheet" href="/css/stock_new_2021/slick.css">
+
+
+</head>
+<body>
+
+<div class="wrap">
+	<th:block th:replace="layer/stockHeader"></th:block>
+
+	<section>
+
+		<div class="main_bnr">
+			<div class="bnr_list">
+				<div class="slide_wrap slick-initialized slick-slider slick-dotted">
+					<div class="slick-list draggable">
+						<div class="slick-track"
+							 style="opacity: 1; width: 3510px; transform: translate3d(-390px, 0px, 0px);">
+							<div class="slick-slide slick-current slick-active" data-slick-index="0" aria-hidden="false" th:each="banner : ${bannerList}" th:if="${banner.subject == 'main'}"
+								 role="tabpanel" id="slick-slide00" style="width: 390px;">
+								<div>
+									<div class="item" style="width: 100%; display: inline-block;"><img
+											th:src="${banner.url}" alt="image">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- // main_bnr -->
+
+
+				<div class="bnr_line" th:each="banner : ${bannerList}" th:if="${banner.subject == 'line'}">
+					<div class="bnr"><img th:src="${banner.url}" alt=""></div>
+				</div>
+
+				<div class="groupBox">
+					<div class="sectionTitle">
+						<div class="title">
+							<div>
+								<h3 class="tit" th:text="${foreignTop.get(0).subject}"></h3>
+								<div class="tooltip"><a href="#g" class="help"><span>도움말</span></a></div>
+							</div>
+							<div class="more"><a href="#g"><span>더보기</span></a></div>
+						</div>
+						<div class="subTitle"
+							 th:text="|${#dates.format(#dates.createNow(), 'yyyy.MM.dd HH:mm')}${' 기준'}|"></div>
+					</div><!-- // sectionTitle -->
+
+					<div class="item-list">
+						<div class="item" th:each="item,index : ${foreignTop}">
+							<div class="item_box">
+								<div class="txt-row">
+									<div class="num"><strong th:text="${index.index+1}"></strong></div>
+									<dl class="info">
+										<dt th:text="${item.title}"></dt>
+										<dd class="stock_up"><strong th:text="|${item.fp}${'억원'}|"></strong></dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="groupBox">
+					<div class="sectionTitle">
+						<div class="title">
+							<div>
+								<h3 class="tit" th:text="${investList.get(0).subject}"></h3>
+								<div class="tooltip"><a href="#g" class="help"><span>도움말</span></a></div>
+							</div>
+						</div>
+						<div class="tab">
+							<button type="button" class="active"><span>누적 수익률 순</span></button>
+							<button type="button"><span>3개월 수익률 순</span></button>
+						</div>
+					</div><!-- // sectionTitle -->
+
+					<div class="roboAI-scroll scroll-wrapper">
+						<div class="scroll">
+							<div class="item" th:each="invest : ${investList}">
+								<div class="itemClassName">
+									<dl>
+										<dt th:text="${invest.title}"></dt>
+										<dd class="date"
+											th:text="${#dates.format(#dates.createNow(), 'yyyy.MM.dd HH:mm')}"></dd>
+										<dd class="per stock_up"><strong th:text="${invest.sum}"></strong><span>%</span>
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div></section>
+
+
+	<div class="main_notice">
+		<dl th:each="info : ${infoList}">
+			<dt><span th:text="${info.title}"></span></dt>
+			<dd><a href="#g" th:text="${info.content}"></a></dd>
+		</dl>
+	</div><!-- // main_notice -->
+
+	
+	<footer>
+		<ul class="site_info">
+			<li><a href="#g" onclick="openLayer('#test1');">이용약관</a></li>
+			<li><a href="#g" onclick="openLayer('#test2');"><strong>개인정보처리방침</strong></a></li>
+			<li><a href="#g" onclick="openLayer('#test3');">투자유의사항</a></li>
+		</ul>
+		<dl>
+			<dt>고객센터</dt>
+			<dd><p>가입/해지 문의 : <a href="tel:114" class="tel">114</a> 또는 <a href="tel:1800-1637" class="tel">1800-1637</a></p></dd>
+			<dd><p>주식관련 문의 : <a href="tel:02-318-0802" class="tel">02-318-0802</a><span></span></p></dd>
+			<dd><p>(평일 09:00~18:00, 점심시간 12:00~13:00)</p></dd>
+		</dl>
+		<div class="btn fixed"><button type="button"><strong>투자전략 전체보기</strong><span>투자전략 유료가입</span></button></div>
+	</footer>
+</div><!-- // wrap -->
+
+</div>
+
+
+
+<script src="../../static/css/stock_new_2021/jquery.min.js"></script>
+<script src="../../static/css/stock_new_2021/slick.js"></script>
+
+</body></html>
