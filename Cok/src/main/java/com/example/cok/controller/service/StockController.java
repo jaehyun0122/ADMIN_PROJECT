@@ -1,4 +1,4 @@
-package com.example.cok.controller;
+package com.example.cok.controller.service;
 
 import com.example.cok.dto.customer.CustomerDto;
 import com.example.cok.dto.service.stock.BannerDto;

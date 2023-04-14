@@ -1,4 +1,4 @@
-package com.example.cok.controller;
+package com.example.cok.controller.service;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

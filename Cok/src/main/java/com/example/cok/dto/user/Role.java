@@ -1,6 +1,5 @@
 package com.example.cok.dto.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

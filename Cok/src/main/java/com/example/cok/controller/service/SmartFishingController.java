@@ -1,14 +1,14 @@
-package com.example.cok.controller;
+package com.example.cok.controller.service;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("carInsurance")
-public class CarInsuranceController {
+@RequestMapping("smartFishing")
+public class SmartFishingController {
     @GetMapping
-    public String carInsurance(){
-        return "cp/carInsurance";
+    public String smartFishing(){
+        return "cp/smartFishing";
     }
 }
