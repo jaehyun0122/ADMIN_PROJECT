@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 </head>
 <body>
@@ -8,6 +8,11 @@
         <h1>스탁</h1>
         <div class="util-btn back"><button type="button" th:onclick="window.history.back()"><span>이전</span></button></div>
         <div class="util-btn close"><button type="button"><span>닫기</span></button></div>
+
+        <div style="display: flex; justify-content: space-between">
+            <a sec:authorize="isAuthenticated()" disabled th:text="|${#authentication.name} 님 안녕하세요|"></a>
+            <a sec:authorize="isAuthenticated()" type="button" th:href="@{/logout}">로그아웃</a>
+        </div>
         <ul class="gnb">
             <li th:each="head : ${stockHeadList}"><a href="#g" th:text="${head}"></a></li>
         </ul>

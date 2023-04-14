@@ -14,14 +14,12 @@
             <button th:onclick="window.history.back()" type="button" class="btn_prev"><span>이전</span></button>
           </div>
           <h1>서비스이름</h1>
-          <div sec:authorize="isAuthenticated()" class="tools-btn">
-            <a type="button" th:href="@{/logout}">로그아웃</a>
-            <h2 th:text="|${#authentication.name} 님 안녕하세요|"></h2>
-<!--            <h2 th:text="${#dates.format(sessionInformation.getLastRequest().getTime() + sessionInformation.getTimeout(),-->
-<!--              'yyyy-MM-dd HH:mm:ss')}">-->
-
-<!--            </h2>-->
+<!--          <p>Your session will expire in <span th:text="${#session.maxInactiveInterval}">0</span> minutes.</p>-->
+          <div style="display: flex; justify-content: space-between">
+            <a sec:authorize="isAuthenticated()" disabled th:text="|${#authentication.name} 님 안녕하세요|"></a>
+            <a sec:authorize="isAuthenticated()" type="button" th:href="@{/logout}">로그아웃</a>
           </div>
+
           <div class="tools-btn">
             <!-- <button type="button" class="btn_menu"><span>메뉴</span></button> -->
             <button type="button" class="btn_close"><span>닫기</span></button>
