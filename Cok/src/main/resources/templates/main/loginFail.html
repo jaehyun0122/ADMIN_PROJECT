@@ -3,19 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <th:block th:replace="common/head :: fragmentHead"/>
-    <script src="/js/slick.js"></script>
     <title>로그인</title>
 </head>
 <body>
-<th:block th:replace="layer/header :: header"></th:block>
 <div class="container">
-    <form id="login" class="login-box" method="POST" th:action="@{/login}">
-        <h2>로그인 해라</h2>
-        <input type="text" name="username" placeholder="아이디를 입력하세요." required>
-        <input type="password" name="password" placeholder="비밀번호를 입력하세요." required>
-        <input type="submit" value="로그인">
-    </form>
+    <div id="login" class="login-box">
+        <h2>로그인 실패</h2>
+        <a type="button" th:href="@{/login}" th:text="'다시 로그인'">
+    </div>
 </div>
 </body>
 <style>
@@ -34,7 +29,6 @@
     }
     .login-box {
         width: 400px;
-        height: 300px;
         background-color: #fff;
         border-radius: 10px;
         display: flex;
@@ -48,7 +42,8 @@
         font-weight: 700;
         margin-bottom: 30px;
     }
-    .login-box input[type="text"], .login-box input[type="password"] {
+    .login-box a {
+        text-align: center;
         width: 100%;
         height: 50px;
         border: none;
@@ -58,7 +53,7 @@
         padding: 5px;
         outline: none;
     }
-    .login-box input[type="submit"] {
+    .login-box a {
         width: 100%;
         height: 50px;
         background-color: #0088cc;
@@ -68,7 +63,7 @@
         font-size: 1.2rem;
         cursor: pointer;
     }
-    .login-box input[type="submit"]:hover {
+    .login-box a:hover {
         background-color: #005fa3;
     }
 </style>

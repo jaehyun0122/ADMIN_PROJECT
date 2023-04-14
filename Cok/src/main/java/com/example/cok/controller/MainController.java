@@ -33,8 +33,9 @@ public class MainController {
         return "/main/index_service";
     }
 
-    @GetMapping("login")
-    public String login(){
-        return "main/login";
+    @GetMapping("loginFail")
+    public String loginFail(){
+        return "main/loginFail";
     }
+
 }
