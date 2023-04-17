@@ -16,7 +16,7 @@
 
     <select id="getServiceQnaList" resultType="ServiceQnaDto">
         select service.service_name, sq.content
-        from service inner join service_question sq on service.id = sq.service_id;
+        from service join service_question sq on service.id = sq.service_id;
     </select>
 
     <select id="getInfoList" parameterType="string" resultType="CustomerDto">

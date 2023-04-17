@@ -25,9 +25,11 @@ public class PrincipalDetailsService implements UserDetailsService {
         Optional<UserDto> member = sqlSession.getMapper(UserDao.class).isMember(username);
         if(member.isPresent()){
             UserDto userDto = member.get();
-
             return new User(userDto.getUsername(), userDto.getPassword(), userDto.getAuthorities());
         }
-        else throw new UsernameNotFoundException("유저 정보가 없습니다.");
+        else {
+            log.info(">>> 유저 정보 없음");
+            throw new UsernameNotFoundException("유저 정보가 없습니다.");
+        }
     }
 }

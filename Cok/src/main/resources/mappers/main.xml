@@ -9,18 +9,18 @@
     </select>
 
     <select id="getSubContentItem" resultType="SubContentDto">
-        select i.subject as subject, i.content as conent
-        from service s left join item i on s.id = i.serviceId limit 1
+        select distinct i.subject as subject, i.content as content
+        from service s join service_stock_item i on s.id = i.serviceId
     </select>
 
     <select id="getSubContentInvest" resultType="SubContentDto">
-        select i.subject as subject, i.content as content
-        from service s left join invest i on s.id = i.serviceId limit 1
+        select distinct i.subject as subject, i.content as content
+        from service s join service_stock_invest i on s.id = i.serviceId
     </select>
 
     <select id="getSubContentStock" resultType="SubContentDto">
-        select i.subject as subject, i.content as content
-        from service s left join recommend_stock i on s.id = i.serviceId limit 1
+        select distinct i.subject as subject, i.content as content
+        from service s join service_stock_recommend i on s.id = i.serviceId
     </select>
 
     <select id="getGnbList" resultType="GnbDto">
@@ -31,27 +31,28 @@
 
 
     <select id="getForeignBuyTop" resultType="ItemDto">
-        select title, sum(fp) as fp, sum(lp) as lp, '기관 외국인 매수 상위' as subject from item
+        select title, sum(fp) as fp, sum(lp) as lp, '기관 외국인 매수 상위' as subject
+        from service_stock_item
         group by title
         order by fp desc;
     </select>
 
     <select id="getInvestList" resultType="InvestDto">
         select title, sum(rate) as sum, '로보AI 포트폴리오' as subject
-        from invest
+        from service_stock_invest
         group by title
         order by sum desc;
     </select>
 
     <select id="getStockHeadList" resultType="string">
-        SELECT subject FROM item
+        SELECT subject FROM service_stock_item
         UNION
-        SELECT subject FROM invest
+        SELECT subject FROM service_stock_invest
         UNION
-        SELECT subject FROM recommend_stock;
+        SELECT subject FROM service_stock_recommend;
     </select>
 
     <select id="getBannerList" resultType="BannerDto">
-        select * from banner
+        select * from service_stock_banner
     </select>
 </mapper>

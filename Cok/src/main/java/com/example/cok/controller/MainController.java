@@ -19,7 +19,7 @@ public class MainController {
     private final ContentService service;
     private final CustomerService customerService;
     @GetMapping
-    public String main(Model model){
+    private String main(Model model){
         List<ServiceDto> serviceList = service.getServiceList();
         List<GnbDto> gnbList = service.getGnbList();
         List<SubContentDto> subContentList = service.getSubContentList();

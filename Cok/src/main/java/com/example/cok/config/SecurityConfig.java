@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        log.info("configure http");
+        log.info(">>> configure http");
         http
                 .authorizeRequests()
                 .antMatchers( "/login","/loginFail","/").permitAll()
@@ -43,13 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        log.info("passwordEncoder");
+        log.info(">>> passwordEncoder");
         return new BCryptPasswordEncoder();
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        log.info("configure AuthenticationManagerBuilder");
+        log.info(">>> configure AuthenticationManagerBuilder");
         auth.userDetailsService(principalDetailsService).passwordEncoder(passwordEncoder());
     }
 

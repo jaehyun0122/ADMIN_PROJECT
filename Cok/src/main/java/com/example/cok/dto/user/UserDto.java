@@ -21,7 +21,7 @@ public class UserDto implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        log.info("getAuthorities {}", this.roles);
+        log.info(">>> getAuthorities {}", this.roles);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         String[] userRoles = this.roles.split(",");
 
