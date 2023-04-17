@@ -1,4 +1,4 @@
-package com.example.cok.dto.service;
+package com.example.cok.service;
 
 import com.example.cok.dao.UserDao;
 import com.example.cok.dto.user.UserDto;
@@ -18,8 +18,10 @@ import java.util.Optional;
 @Slf4j
 public class PrincipalDetailsService implements UserDetailsService {
     private final SqlSession sqlSession;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("loadUser {}", username);
         Optional<UserDto> member = sqlSession.getMapper(UserDao.class).isMember(username);
         if(member.isPresent()){
             UserDto userDto = member.get();

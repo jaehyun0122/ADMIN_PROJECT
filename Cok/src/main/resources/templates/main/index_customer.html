@@ -19,12 +19,12 @@
 				<div class="main_customer">
 					<div th:each="mainInfo : ${mainInfoList}" th:if="${mainInfo.subject == '전화문의'}">
 						<strong class="tit" th:utext="${mainInfo.subject}"></strong>
-						<a th:href="@{${mainInfo.url}}" th:utext="${mainInfo.getSub_info}"></a>
-						<p th:utext="${mainInfo.time}"></p>
+						<a th:href="@{${mainInfo.url}}" th:text="${mainInfo.getSub_info}"></a>
+						<p th:text="${mainInfo.time}"></p>
 					</div>
 					<ul>
 						<li th:each="mainInfo : ${mainInfoList}" th:if="${mainInfo.sub_info == null}">
-							<a th:href="${mainInfo.url}"><span th:utext="${mainInfo.subject}"></span></a>
+							<a th:href="${mainInfo.url}"><span th:text="${mainInfo.subject}"></span></a>
 						</li>
 					</ul>
 				</div>
@@ -40,12 +40,6 @@
 						</ul>
 					</th:block>
 				</div>
-
-<!--				<div>-->
-<!--					<ul class="link_list">-->
-<!--						<li><a href="#g"><span>서비스별 문의/해지</span></a></li>-->
-<!--					</ul>-->
-<!--				</div>-->
 
 			</div>
 			

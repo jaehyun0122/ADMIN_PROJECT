@@ -23,12 +23,13 @@ public class MainController {
         List<ServiceDto> serviceList = service.getServiceList();
         List<GnbDto> gnbList = service.getGnbList();
         List<SubContentDto> subContentList = service.getSubContentList();
+        // 메인 화면 슬라이드에 공지사항 이미지
         List<CustomerDto> infoList = customerService.getInfoList("공지사항");
 
-        model.addAttribute("infoList", infoList);
         model.addAttribute("serviceList", serviceList);
-        model.addAttribute("subContentList", subContentList);
         model.addAttribute("gnbList", gnbList);
+        model.addAttribute("subContentList", subContentList);
+        model.addAttribute("infoList", infoList);
 
         return "/main/index_service";
     }

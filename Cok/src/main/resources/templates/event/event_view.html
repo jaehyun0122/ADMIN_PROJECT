@@ -23,7 +23,7 @@
 					<div class="event_view">
 						<div class="event_title">
 							<div class="inner">
-								<h2 th:utext="${eventDetail.title}"></h2>
+								<h2 th:text="${eventDetail.title}"></h2>
 								<span class="date" th:utext="${eventDetail.regDate}"></span>
 							</div>
 						</div><!-- // event_title -->
@@ -57,18 +57,6 @@
 
 
 <div class="dim"></div>
-<div class="layer alert" style="display:none;"><!-- 기본형 샘플 -->
-	<div class="layer_inner">
-		<div class="layer_content">
-			<div class="tit">제목이 들어갑니다.</div>
-			<p>내용이 들어갑니다.</p>
-		</div>
-		<div class="btn_group">
-			<div><button type="button" class="prev"><span>버튼명</span></button></div><!-- prev, back, cancel -->
-			<div><button type="button" class="next"><span>확인</span></button></div>
-		</div>
-	</div>
-</div>
 
 
 <div class="layer alert" id="ev_temp"><!-- id값은 개발에 맞게 수정 -->
@@ -90,7 +78,7 @@
 <script>
 	$(document).ready(function (){
 		let time = '[[${eventDetail.endDate}]]';
-		let date = new Date(Date.parse(time.replace(/\./g, "-")));
+		let date = new Date(Date.parse(time));
 		let now = new Date();
 		if(now.getTime() <= date.getTime()){
 			$("#ing").css("display", "block")

@@ -27,5 +27,4 @@
         select * from info where id = #{id}
     </select>
 
-
 </mapper>

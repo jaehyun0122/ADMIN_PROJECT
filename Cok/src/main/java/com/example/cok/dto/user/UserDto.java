@@ -2,6 +2,7 @@ package com.example.cok.dto.user;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import java.util.Collection;
 
 @Data
 @Builder
+@Slf4j
 public class UserDto implements UserDetails{
     private int id;
     private String username;
@@ -19,8 +21,13 @@ public class UserDto implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        log.info("getAuthorities {}", this.roles);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        String[] userRoles = this.roles.split(",");
+
+        for (String userRole : userRoles) {
+            authorities.add(new SimpleGrantedAuthority(userRole));
+        }
 
         return authorities;
     }

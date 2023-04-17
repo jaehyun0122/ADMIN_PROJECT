@@ -29,7 +29,7 @@
 									<a th:href="@{|${'/event/'}${event.id}|}"><img th:src="${event.url}"></a>
 								</div>
 								<div class="tit"><strong th:utext="${event.title}"></strong></div>
-								<span class="date" th:utext="|${event.startDate} ${'~'} ${event.endDate}|"></span>
+								<span class="date" th:text="|${event.startDate} ${'~'} ${event.endDate}|"></span>
 							</li>
 							<!-- // 진행중/종료된 이벤트가 없을경우-->
 							<li th:if="${eventList.size() == 0}" class="nodata"><p>진행중인 이벤트가 없습니다.</p></li>
@@ -47,22 +47,6 @@
 	<th:block th:replace="layer/footer"/>
 	
 </div><!-- // wrap -->
-
-
-
-<div class="dim"></div>
-<div class="layer alert type1" style="display:none;">
-	<div class="layer_inner">
-		<div class="layer_content">
-			<div class="tit">제목이 들어갑니다.</div>
-			<p>내용이 들어갑니다.</p>
-		</div>
-		<div class="btn_group">
-			<div><button type="button" class="prev"><span>버튼명</span></button></div><!-- class="name" prev, back, cancel -->
-			<div><button type="button" class="next"><span>확인</span></button></div>
-		</div>
-	</div>
-</div>
 
 
 <script src="../../js/temp.js"></script>
