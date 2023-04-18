@@ -13,7 +13,7 @@
 	<div class="container_wrap">
 
 		<section class="container">
-<!--			메인 메뉴 ( 서비스, 이벤트, 고객센터 )-->
+<!--			공지사항 배너 슬라이드 -->
 			<div>
 				<div class="main_bnr" id="main_bnr">
 					<div class="item" th:each="info : ${infoList}">
@@ -22,12 +22,12 @@
 				</div>
 			</div>
 
+<!--			서비스에 포함되는 증권추천, 인증 자동차 ...-->
 			<div class="content_wrap">
-<!--				서비스에 포함되는 증권추천, 인증 자동차 ...-->
 				<div class="main_service_list">
 					<ul>
 						<li th:each="service : ${serviceList}">
-							<a th:href="@{${service.url}}"><span class="icon"><img src="/images/main/icon_service_stock.png" alt=""></span><span th:text="${service.service_name}" class="txt"></span></a>
+							<a th:href="@{${service.url}}"><span class="icon"><img th:src="${service.img_url}" alt=""></span><span th:text="${service.service_name}" class="txt"></span></a>
 						</li>
 					</ul>
 				</div>

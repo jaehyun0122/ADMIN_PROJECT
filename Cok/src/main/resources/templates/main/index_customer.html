@@ -23,7 +23,7 @@
 						<p th:text="${mainInfo.time}"></p>
 					</div>
 					<ul>
-						<li th:each="mainInfo : ${mainInfoList}" th:if="${mainInfo.sub_info == null}">
+						<li th:each="mainInfo : ${mainInfoList}" th:if="${mainInfo.subject == '이메일 문의' || mainInfo.subject == '서비스별 문의'}">
 							<a th:href="${mainInfo.url}"><span th:text="${mainInfo.subject}"></span></a>
 						</li>
 					</ul>

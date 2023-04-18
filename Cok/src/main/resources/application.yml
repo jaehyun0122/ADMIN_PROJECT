@@ -7,3 +7,9 @@ spring:
 mybatis:
   type-aliases-package: com.example.cok.dto
   mapper-locations: classpath:mappers/*.xml
+server:
+  servlet:
+    session:
+      cookie:
+        max-age: 1200
+

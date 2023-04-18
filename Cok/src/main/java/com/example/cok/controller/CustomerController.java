@@ -25,12 +25,12 @@ public class CustomerController {
     @GetMapping()
     public String customer(Model model){
         List<GnbDto> gnbList = service.getGnbList();
-        List<CustomerDto> customerList = customerService.getCustomerList();
         List<MainInfoDto> mainInfoList = customerService.getMainInfoList();
+        List<CustomerDto> customerList = customerService.getCustomerList();
 
         model.addAttribute("gnbList", gnbList);
-        model.addAttribute("customerList", customerList);
         model.addAttribute("mainInfoList", mainInfoList);
+        model.addAttribute("customerList", customerList);
 
         return "main/index_customer";
     }
@@ -65,8 +65,8 @@ public class CustomerController {
         return "customer/faq";
     }
 
-    @GetMapping("stategy")
-    public String stategy(Model model){
+    @GetMapping("strategy")
+    public String strategy(Model model){
         List<CustomerDto> strategyList = customerService.getInfoList("이용약관 및 정책");
         model.addAttribute("strategyList", strategyList);
 

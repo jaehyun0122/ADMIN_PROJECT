@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -20,16 +21,16 @@ public class MainController {
     private final CustomerService customerService;
     @GetMapping
     private String main(Model model){
-        List<ServiceDto> serviceList = service.getServiceList();
         List<GnbDto> gnbList = service.getGnbList();
-        List<SubContentDto> subContentList = service.getSubContentList();
         // 메인 화면 슬라이드에 공지사항 이미지
         List<CustomerDto> infoList = customerService.getInfoList("공지사항");
+        List<ServiceDto> serviceList = service.getServiceList();
+        List<SubContentDto> subContentList = service.getSubContentList();
 
-        model.addAttribute("serviceList", serviceList);
         model.addAttribute("gnbList", gnbList);
-        model.addAttribute("subContentList", subContentList);
         model.addAttribute("infoList", infoList);
+        model.addAttribute("serviceList", serviceList);
+        model.addAttribute("subContentList", subContentList);
 
         return "/main/index_service";
     }

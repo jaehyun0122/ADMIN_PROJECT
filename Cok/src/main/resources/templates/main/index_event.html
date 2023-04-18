@@ -26,7 +26,7 @@
 						<ul>
 							<li th:if="${eventList.size() > 0}" class="item" th:each="event : ${eventList}">
 								<div class="thum">
-									<a th:href="@{|${'/event/'}${event.id}|}"><img th:src="${event.url}"></a>
+									<a th:href="@{|${'/event/'}${event.id}|}"><img th:src="${event.img_url}"></a>
 								</div>
 								<div class="tit"><strong th:utext="${event.title}"></strong></div>
 								<span class="date" th:text="|${event.startDate} ${'~'} ${event.endDate}|"></span>

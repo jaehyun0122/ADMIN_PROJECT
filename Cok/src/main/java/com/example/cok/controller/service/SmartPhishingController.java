@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("smartFishing")
-public class SmartFishingController {
+public class SmartPhishingController {
     @GetMapping
     public String smartFishing(){
-        return "cp/smartFishing";
+        return "cp/smartPhishing";
     }
 }

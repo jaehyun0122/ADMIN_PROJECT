@@ -10,5 +10,5 @@ public class EventDto {
     private String regDate;
     private String startDate;
     private String endDate;
-    private String url;
+    private String img_url;
 }
