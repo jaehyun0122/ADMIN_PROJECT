@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/final_project
+    username: root
+    password: ajdcjddl2
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#mybatis:
+#  type-aliases-package: com.example.cok.dto
+#  mapper-locations: classpath:mappers/*.xml
