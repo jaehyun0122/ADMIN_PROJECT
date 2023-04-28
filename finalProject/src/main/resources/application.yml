@@ -4,6 +4,15 @@ spring:
     username: root
     password: ajdcjddl2
     driver-class-name: com.mysql.cj.jdbc.Driver
-#mybatis:
-#  type-aliases-package: com.example.cok.dto
-#  mapper-locations: classpath:mappers/*.xml
+
+mybatis:
+  type-aliases-package: com.example.finalproject.dto
+  mapper-locations: classpath:mappers/*.xml
+
+# logback 파일 위치 설정
+#logging:
+#  config: classpath:logback.xml
+#server:
+#  servlet:
+#    session:
+#      timeout: 10

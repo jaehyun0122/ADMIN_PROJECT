@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproject.mapper.ServiceMapper">
+
+    <!--서비스 등록 요청-->
+    <!--파라미터 : serviceInfo(등록 정보), fileInfo(이미지, pdf를 바이너르 형태로 변환)-->
+    <!--BLOB 타입 : 대형 이진 객체 저장 타입. 이미지, 오디오, 비디오 등 멀티미디어 파일을 저장하는데 사용-->
+    <insert id="serviceRegister" parameterType="map">
+        INSERT INTO service(userIdx, companyName, companyNo, image, pdf)
+        SELECT userIdx, #{serviceInfo.companyName}, #{serviceInfo.companyNo}, #{fileInfo.imageByte, jdbcType=BLOB}, #{fileInfo.pdfByte, jdbcType=BLOB}
+        FROM user
+        WHERE email LIKE #{serviceInfo.email};
+    </insert>
+
+    <!--서비스 목록 가져오기-->
+    <!--파라미터 : 유저 이메일-->
+    <!--resultType : 등록 정보-->
+    <select id="getServiceList" parameterType="map" resultType="FindServiceDto">
+        SELECT userIdx, companyName, companyNo, isPermit as isPermit, permitAt, regAt /*image, pdf,*/
+        FROM service
+        WHERE userIdx = (SELECT userIdx
+                         FROM user
+                         WHERE email like #{email})
+          /*전체 목록 아닐 때만 상태값에 따른 조건문 실행*/
+        <if test="status != 'all' ">
+            AND isPermit = #{status}
+        </if>
+    </select>
+
+</mapper>
