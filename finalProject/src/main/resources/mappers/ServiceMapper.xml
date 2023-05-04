@@ -25,4 +25,17 @@
         </if>
     </select>
 
+    <!--모든 서비스 목록-->
+    <select id="allServiceList" resultType="FindServiceDto">
+        SELECT id, email, companyName, companyNo, isPermit as isPermit, permitAt, regAt, image, pdf, originImgName, originPdfName
+        FROM service
+    </select>
+
+    <!--서비스 상세 정보-->
+    <select id="getServiceDetail" parameterType="Integer" resultType="FindServiceDto">
+        SELECT id, email, companyName, companyNo, image, pdf, originImgName, originPdfName, isPermit, regAt, permitAt, negativeComment
+        FROM service
+        WHERE id = #{id}
+    </select>
+
 </mapper>

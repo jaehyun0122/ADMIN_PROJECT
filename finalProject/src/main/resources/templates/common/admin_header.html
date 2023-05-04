@@ -33,7 +33,7 @@
                                                                   th:href="@{/user/profile}"
                                                                   th:text="|${#authentication.name}|"></a></li>
         <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                  th:href="@{logout}" th:text="로그아웃"></a></li>
+                                                                  th:href="@{/logout}" th:text="로그아웃"></a></li>
         <!--      END 로그인 O        -->
 
         <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" th:href="@{/admin/service}">서비스</a></li>

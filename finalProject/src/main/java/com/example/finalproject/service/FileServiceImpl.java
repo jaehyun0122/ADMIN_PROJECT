@@ -105,7 +105,23 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public List<FindServiceDto> getServiceList() {
+
         return serviceMapper.allServiceList();
+    }
+
+    // 서비스 상세 정보
+    @Override
+    public FindServiceDto getServiceDetail(int id) {
+        FindServiceDto serviceDetail = serviceMapper.getServiceDetail(id);
+
+        // 이미지 url 생성
+        // img byte[] => base64 encoding
+        String base64EncodedImageData = Base64.getEncoder().encodeToString(serviceDetail.getImage());
+        String base64EncodedPdfData = Base64.getEncoder().encodeToString(serviceDetail.getPdf());
+        serviceDetail.setBase64Img("data:image/jpeg;base64," + base64EncodedImageData);
+        serviceDetail.setBase64Pdf(base64EncodedPdfData);
+
+        return serviceDetail;
     }
 
     /**
@@ -137,4 +153,5 @@ public class FileServiceImpl implements FileService{
 
         return convertedFile;
     }
+
 }

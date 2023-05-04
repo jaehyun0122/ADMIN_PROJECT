@@ -10,6 +10,7 @@ class SecurityConfigTest {
     void bycTest(){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encoder = passwordEncoder.encode("user");
+        System.out.println(encoder);
 
     }
 

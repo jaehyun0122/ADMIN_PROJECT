@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class FindServiceDto {
+    private int id;
     private String companyName;
     private String companyNo;
     private String email;
@@ -13,7 +14,9 @@ public class FindServiceDto {
     private String originPdfName;
     private byte[] image;
     private byte[] pdf;
-    private int isPermit;
+    private String base64Img;
+    private String base64Pdf;
+    private int isPermit; // 0:대기 , 1:승인 , 2:반려
     private LocalDateTime regAt;
     private LocalDateTime permitAt;
 }

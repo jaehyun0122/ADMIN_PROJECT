@@ -56,9 +56,23 @@ public class AdminController {
 
     // 서비스 목록 페이지
     @GetMapping("service")
-    public String serviceListPage(){
+    public String serviceListPage(Model model){
+        List<FindServiceDto> serviceList = fileService.getServiceList();
+        model.addAttribute("serviceList", serviceList);
+
         return "/admin/admin_service_list";
     }
+
+    // 서비스 상세 페이지
+    @GetMapping("service/detail")
+    public String serviceDetail(@RequestParam(name = "id") int id, Model model){
+        FindServiceDto serviceDetail = fileService.getServiceDetail(id);
+
+        model.addAttribute("serviceDetail", serviceDetail);
+
+        return "/admin/admin_service_detail";
+    }
+
     // 관리자 목록 페이지
     @GetMapping("admins")
     public String adminListPage(Model model){

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>사용자 정보 변경</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<th:block th:replace="common/header :: navBar"/>
+
+<!--  wrapper -->
+<div class="container mt-4">
+  <!-- 테이블   -->
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <form action="#">
+            <div class="form-group">
+              <label for="email" th:classappend="form-control" name="email">이메일</label>
+              <input type="text" name="email" id="email" disabled th:placeholder="${serviceDetail.email}">
+            </div>
+            <div class="form-group">
+              <label for="userName" th:classappend="form-control" name="userName">이름</label>
+              <input type="text" name="userName" id="userName" disabled
+                     th:placeholder="${serviceDetail.email}">
+            </div>
+            <div class="form-group">
+              <label for="password" th:classappend="form-control" name="password">비밀번호</label>
+              <input type="password" name="password" id="password" disabled th:placeholder="${serviceDetail.regAt}">
+            </div>
+            <div class="form-group">
+<!--              <label for="password" th:classappend="form-control" name="password">비밀번호</label>-->
+              <!--<input type="password" name="password" id="password" disabled th:placeholder="${serviceDetail.regAt}">-->
+                <figure>
+                        <img th:if="${serviceDetail.originImgName != null}" th:src="@{${serviceDetail.getBase64Img}}" th:alt="이미지" />
+                        <figcaption th:if="${serviceDetail.originImgName != null}">
+                            <a th:href="@{/}" th:text="${serviceDetail.originImgName}"></a>
+                        </figcaption>
+                      <p th:if="${serviceDetail.originImgName == null}">이미지가 없습니다.</p>
+                </figure>
+
+            </div>
+          <div class="form-group">
+              <!--              <label for="password" th:classappend="form-control" name="password">비밀번호</label>-->
+              <!--<input type="password" name="password" id="password" disabled th:placeholder="${serviceDetail.regAt}">-->
+              <a th:if="${serviceDetail.originPdfName != null}" th:href="@{/downloadPdf/{pdfId}(pdfId=${serviceDetail.id})}" th:text="${serviceDetail.originPdfName}"></a>
+              <p th:if="${serviceDetail.originPdfName == null}">pdf가 없습니다.</p>
+          </div>
+            <button type="submit" id="ok" class="btn btn-primary">승인</button>
+            <button type="submit" id="negative" class="btn btn-primary">반려</button>
+          </form>
+        </div>
+        <!-- End 테이블   -->
+      </div>
+      <!-- End wrapper -->
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+<script>
+
+</script>
+<style>
+  .table tr{
+    height: 100px;
+  }
+
+  .pdf-viewer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+  }
+  .pdf-embed {
+      border: none;
+      width: 100%;
+      height: 100%;
+  }
+  </style>
+</style>
+</html>

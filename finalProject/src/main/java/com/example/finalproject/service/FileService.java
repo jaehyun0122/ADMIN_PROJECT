@@ -24,4 +24,7 @@ public interface FileService {
     // 모든 서비스 목록
     List<FindServiceDto> getServiceList();
 
+    // 서비스 상세 정보
+    FindServiceDto getServiceDetail(int id);
+
 }

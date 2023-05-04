@@ -23,4 +23,7 @@ public interface ServiceMapper {
     // 모든 등록 서비스 가져오기
     List<FindServiceDto> allServiceList();
 
+    // 서비스 상세 목록
+    FindServiceDto getServiceDetail(int id);
+
 }
