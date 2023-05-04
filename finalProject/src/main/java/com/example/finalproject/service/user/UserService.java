@@ -1,6 +1,11 @@
 package com.example.finalproject.service.user;
 
+import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.dto.user.UserRegisterDto;
+import org.springframework.security.core.Authentication;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     /**
@@ -9,4 +14,15 @@ public interface UserService {
      */
     void insertUser(UserRegisterDto user);
 
+    // 유저 상세 정보 조회
+    UserDto getUserProfile(String email);
+
+    // 유저 패스워드 수정
+    void modifyPassword(Authentication authentication, String password);
+
+    // 유저 이름 수정
+    void modifyUserName(Authentication authentication, String userName);
+
+    // admin or user 목록 가져오기
+    List<UserDto> getUserList(String type);
 }

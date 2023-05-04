@@ -1,5 +1,6 @@
 package com.example.finalproject.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto implements UserDetails {
-    private int userId;
     private String userName;
     private String phoneNo;
     private String email;

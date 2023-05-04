@@ -53,9 +53,17 @@ public class FileServiceImpl implements FileService{
         Map<String, Object> map = new HashMap<>();
 
         FileTransferDto fileTransferDto = new FileTransferDto();
+
+        // BLOB 타입에 저장하기 위해 bytes 변환
         fileTransferDto.setImageByte(serviceRegisterDto.getImage().getBytes());
         fileTransferDto.setPdfByte(serviceRegisterDto.getPdf().getBytes());
 
+        // 원본 파일 이름
+        String originImgName = convertMultiPartToFile(serviceRegisterDto.getImage()).getName();
+        String originPdfName = convertMultiPartToFile(serviceRegisterDto.getPdf()).getName();
+
+        serviceRegisterDto.setOriginImgName(originImgName);
+        serviceRegisterDto.setOriginPdfName(originPdfName);
         serviceRegisterDto.setEmail(authentication.getPrincipal().toString());
 
         map.put("serviceInfo", serviceRegisterDto);
@@ -76,7 +84,6 @@ public class FileServiceImpl implements FileService{
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("email", authentication.getPrincipal().toString());
         paramMap.put("status", status);
-        System.out.println("status : "+status);
 
         Optional<List<FindServiceDto>> findResult
                 = Optional.ofNullable(sqlSession.selectList("getServiceList", paramMap));
@@ -86,6 +93,19 @@ public class FileServiceImpl implements FileService{
         }
 
         return findResult.get();
+    }
+
+    // 모든 등록 서비스 가져오기
+
+
+    @Override
+    public List<FindServiceDto> getServiceList(String type) {
+        return null;
+    }
+
+    @Override
+    public List<FindServiceDto> getServiceList() {
+        return serviceMapper.allServiceList();
     }
 
     /**
@@ -104,9 +124,9 @@ public class FileServiceImpl implements FileService{
     }
 
     /**
-     * 이미지 가로, 세로 측정을 위해 MultiPartFile => File
+     * MultiPartFile => File
      * @param multipartFile
-     * @return
+     * @return File
      * @throws IOException
      */
     private File convertMultiPartToFile(MultipartFile multipartFile) throws IOException {

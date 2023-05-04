@@ -15,15 +15,7 @@
     <div class="d-flex flex-row-reverse">
 
         <div style="padding: 10px">
-            <a type="button" class="btn btn-secondary" th:href="@{service/register}">등록</a>
-        </div>
-
-        <div style="padding: 10px">
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                <option value="1" selected>전체</option>
-                <option value="2">답변 완료</option>
-                <option value="3">대기</option>
-            </select>
+            <a type="button" class="btn btn-secondary" th:href="@{/service/question/register}">등록</a>
         </div>
 
     </div>
@@ -36,23 +28,17 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">제목</th>
-                <th scope="col">상태</th>
+                <th scope="col">답변 여부</th>
+                <th scope="col">등록일시</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>@twitter</td>
+            <tr th:each="question, index : ${questionList}">
+                <th scope="row" th:text="${index.index+1}">1</th>
+                <td th:text="${question.title}"></td>
+                <td th:if="${question.isAnswer == true}" th:text="완료"></td>
+                <td th:if="${question.isAnswer == false}" th:text="대기"></td>
+                <td th:text="${question.regAt}"></td>
             </tr>
             </tbody>
         </table>

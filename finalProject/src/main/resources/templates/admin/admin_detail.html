@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>사용자 정보 변경</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<th:block th:replace="common/admin_header :: adminNavBar"/>
+
+<!--  wrapper -->
+<div class="container mt-4">
+  <div class="container mt-4">
+    <h1>User Details</h1>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h5>User Info</h5>
+        <hr>
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" class="form-control" id="username" readonly th:placeholder="${userInfo.username}">
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" id="email" th:value="${userInfo.email}" readonly th:placeholder="${userInfo.email}">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input type="text" class="form-control" id="phone" readonly th:placeholder="${userInfo.phoneNo}">
+        </div>
+        <div class="form-group">
+          <label for="createdAt">가입 일시:</label>
+          <input type="text" class="form-control" id="createdAt" readonly th:placeholder="${userInfo.createdAt}">
+        </div>
+        <div class="form-group">
+          <label for="isPermit">승인 여부:</label>
+          <input type="text" class="form-control" id="isPermit" readonly th:placeholder="${userInfo.isPermit() == true ? '승인' : '미승인'}">
+          <button id="permit" type="button" class="btn btn-primary" th:if="${userInfo.isPermit()} == false">승인하기</button>
+        </div>
+        <div class="form-group">
+          <label for="isLock">계정 잠김:</label>
+          <input type="text" class="form-control" id="isLock" readonly th:placeholder="${userInfo.isLock() == true ? '잠김' : '정상'}">
+          <button id="lock" type="button" class="btn btn-primary" th:if="${userInfo.isLock()} == false">계정 잠그기</button>
+          <button id="unlock" type="button" class="btn btn-primary" th:if="${userInfo.isLock()} == true">계정 잠금 해제</button>
+        </div>
+        <div class="form-group">
+          <label for="isQuit">탈퇴:</label>
+          <input type="text" class="form-control" id="isQuit" readonly th:placeholder="${userInfo.isQuit() == true ? '탈퇴 사용자' : '정상'}">
+          <button id="quit" type="button" class="btn btn-primary" th:if="${userInfo.isQuit()} == false">탈퇴</button>
+          <button id="unQuit" type="button" class="btn btn-primary" th:if="${userInfo.isQuit()} == true">탈퇴 취소</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="isPause">중지:</label>
+        <input type="text" class="form-control" id="isPause" readonly th:placeholder="${userInfo.isPause() == true ? '중지된 사용자' : '정상'}">
+        <button id="pause" type="button" class="btn btn-primary" th:if="${userInfo.isPause()} == false">중지</button>
+        <button id="unPause" type="button" class="btn btn-primary" th:if="${userInfo.isPause()} == true">중지 취소</button>
+      </div>
+    </div>
+    </div>
+  </div>
+        <!-- End 테이블   -->
+      </div>
+      <!-- End wrapper -->
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+  /*버튼 클릭 시 이벤트 함수*/
+  $(".btn-primary").click(function (){
+    let id = $(this).attr("id"); // button id
+    let url = ""; // 요청 url
+
+    switch (id){
+      // permit : 가입 요청 승인
+      case "permit" :
+        url = "/admin/regPermit"
+        break;
+      // lock : 계정 잠그기
+      case "lock" :
+        url = "/admin/lock"
+        break;
+      // unlock : 계정 잠금 해제
+      case "unlock" :
+        url = "/admin/unlock"
+        break;
+      // quit : 계정 탈퇴
+      case "quit" :
+        url = "/admin/quit";
+        break;
+      // unQuit : 계정 탈퇴 취소
+      case "unQuit" :
+        url = "/admin/unQuit"
+        break;
+        // pause : 계정 중지 시키기
+      case "pause" :
+        url = "/admin/pause"
+        break;
+        // unPause : 계정 중지 취소
+      case "unPause" :
+        url = "/admin/unPause"
+        break;
+    }
+
+    eventRequest(url);
+  })
+
+  /*이벤트 요청 함수*/
+  function eventRequest(url){
+
+    $.ajax({
+      method: "POST",
+      url: url,
+      data: JSON.stringify({email: $("#email").val()}),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      beforeSend: function(xhr) {
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        if (csrfHeader) {
+          xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+        }
+      },
+      success: function (response){
+        alert("완료");
+        location.href = "/admin/reg";
+      },
+      error: function (){
+        alert("요청 실패");
+      }
+    })
+  }
+  /*End 이벤트 요청 함수*/
+
+</script>
+</html>

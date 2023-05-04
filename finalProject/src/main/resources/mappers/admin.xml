@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproject.mapper.AdminMapper">
+    <!--가입 승인-->
+    <update id="permitSignIn" parameterType="string">
+        UPDATE user
+        SET isPermit = 1
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 잠그기-->
+    <update id="lockUser" parameterType="string">
+        UPDATE user
+        SET isLock = 1
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 잠금 해제-->
+    <update id="unlockUser" parameterType="string">
+        UPDATE user
+        SET isLock = 0
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 중지-->
+    <update id="pauseUser" parameterType="string">
+        UPDATE user
+        SET isPause = 1
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 중지 해제-->
+    <update id="unPauseUser" parameterType="string">
+        UPDATE user
+        SET isPause = 0
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 탈퇴-->
+    <update id="quitUser" parameterType="string">
+        UPDATE user
+        SET isQuit = 1
+        WHERE email like #{email}
+    </update>
+
+    <!--계정 탈퇴 해제-->
+    <update id="unQuitUser" parameterType="string">
+        UPDATE user
+        SET isQUit = 0
+        WHERE email like #{email}
+    </update>
+</mapper>

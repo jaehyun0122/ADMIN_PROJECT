@@ -14,7 +14,7 @@ class UserServiceImplTest {
     @Test
     void encoding(){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        System.out.println(passwordEncoder.encode("123").length());
+        System.out.println(passwordEncoder.encode("123"));
     }
 
     @Test

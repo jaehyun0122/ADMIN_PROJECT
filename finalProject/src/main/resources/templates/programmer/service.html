@@ -45,17 +45,7 @@
         </tr>
         </thead>
         <tbody id="body">
-          <tr th:each="service, index : ${serviceList}">
-            <th scope="row" th:text="${index.index}+1">목록 번호</th>
-            <td th:text="${service.getCompanyName()}">회사 이름</td>
-            <th:block th:switch="${service.getIsPermit()}">
-              <td th:case="'0'">대기중</td>
-              <td th:case="'1'">승인</td>
-              <td th:case="'2'">반려</td>
-            </th:block>
-            <td th:text="${service.getPermitAt()}">승인 시간</td>
-            <td th:text="${service.getRegAt()}">등록 시간</td>
-          </tr>
+
         </tbody>
       </table>
   </div>
@@ -75,7 +65,10 @@
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       beforeSend: function(xhr) {
-        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        if (csrfHeader) {
+          xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+        }
       },
       success: function(response) {
         console.log(response)
@@ -89,7 +82,7 @@
 
   /*정렬 selection 변경 시 실행 되는 함수*/
   $('select').on('change', function() {
-    // 전체 : 0 ,  대기 : 1 , 승인 : 2 , 반려 : 3
+    // 전체 : all ,  대기 : 0 , 승인 : 1 , 반려 : 2
     let selectedValue = $(this).val();
 
       $.ajax({
@@ -98,6 +91,7 @@
         data: JSON.stringify({ "status": selectedValue }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        /*spring security 에서 ajax 요청 막아서 설정해줘야됨*/
         beforeSend: function(xhr) {
           xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
         },
@@ -123,6 +117,7 @@
         <th scope="row">${idx+1}</th>
         <th scope="row">${row.companyName}</th>
         `
+      /*승인 여부에 따른 다른 텍스트*/
       switch (row.isPermit){
         case 0 :
           body += `<td>대기중</td>`;
@@ -134,17 +129,21 @@
           body += `<td>반려</td>`;
           break;
       }
+      /*승인 시간이 없으면 빈 태그 만들어줌. 아니면 null 글자 보임.*/
       if(row.permitAt == null){
         body += "<td></td>"
       }else{
         body += `<td>${row.permitAt}</td>`
       }
+
       body += `
         <td>${row.regAt}</td>
         </tr>`
     })
 
+    /*이전 바디 내용 지우기*/
     $("#body").empty();
+    /*새로운 바디 내용 추가*/
     $("#body").append(body);
 
   }

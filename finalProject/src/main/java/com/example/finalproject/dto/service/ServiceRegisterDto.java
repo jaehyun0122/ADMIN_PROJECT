@@ -11,7 +11,8 @@ public class ServiceRegisterDto {
     private String companyName;
     private String companyNo;
     private String email;
-    private int userIdx;
+    private String originImgName;
+    private String originPdfName;
     private MultipartFile image;
     private MultipartFile pdf;
 }

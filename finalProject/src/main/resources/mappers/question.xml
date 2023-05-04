@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproject.mapper.QuestionMapper">
+    <!--모든 문의 내용 가져오기. 등록일 오름차순-->
+    <select id="getQuestionList" parameterType="string" resultType="QuestionDto">
+        SELECT id, title, content, regAt, isAnswer
+        FROM question
+        WHERE email like #{email}
+        ORDER BY regAt
+    </select>
+
+    <!--문의 등록-->
+    <insert id="registerQuestion" parameterType="QuestionDto">
+        INSERT INTO question (email, title, content)
+        VALUES (#{email},#{title}, #{content})
+    </insert>
+
+</mapper>

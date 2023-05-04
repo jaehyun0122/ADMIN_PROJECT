@@ -11,7 +11,11 @@
 <nav th:fragment="navBar" class="navbar navbar-expand-lg navbar-dark bg-dark">
 
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}">개발자 페이지</a>
+        <!--USER 권한-->
+        <a sec:authorize="hasRole('ROLE_USER')" class="navbar-brand" th:href="@{/}">개발자 페이지</a>
+        <!--ADMIN 권한-->
+        <a sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-brand" th:href="@{/}">관리자 페이지</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
                 class="navbar-toggler-icon"></span></button>
@@ -23,13 +27,14 @@
                                                                            th:href="@{login}">로그인</a></li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
                                                                            th:href="@{register}">회원가입</a></li>
+                <!--      END 로그인 X        -->
                 <!--      로그인 O        -->
                 <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                          href="#!"
+                                                                          th:href="@{/user/profile}"
                                                                           th:text="|${#authentication.name}|"></a></li>
                 <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
                                                                           th:href="@{logout}" th:text="로그아웃"></a></li>
-
+                <!--      END 로그인 O        -->
 
                 <li class="nav-item"><a class="nav-link" th:href="@{service}">서비스</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{service/question}">문의하기</a></li>

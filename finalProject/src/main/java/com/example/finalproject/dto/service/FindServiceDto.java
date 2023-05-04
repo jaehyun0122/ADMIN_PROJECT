@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 public class FindServiceDto {
     private String companyName;
     private String companyNo;
-    private int userIdx;
+    private String email;
+    private String originImgName;
+    private String originPdfName;
     private byte[] image;
     private byte[] pdf;
     private int isPermit;

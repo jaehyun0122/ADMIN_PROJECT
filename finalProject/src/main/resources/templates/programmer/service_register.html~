@@ -12,7 +12,7 @@
   <div class="container my-5">
       <div class="container my-5">
           <div class="row justify-content-center">
-              <div class="col-lg-2">
+              <div class="col-lg-8">
                   <form th:action="@{/service/register}" method="post" enctype="multipart/form-data"> <!--java에서 multipartfile을 처리하기 위해 enctype 설정-->
                       <div class="mb-3">
                           <label for="companyName" class="form-label">회사명</label>
@@ -23,16 +23,15 @@
                           <input type="number" name="companyNo" class="form-control" id="ownerNum">
                       </div>
                       <div class="mb-3">
-<!--                          이미지 크기 체크해야됨. 168*168 || 192*600(이하)-->
-                          <label for="image" class="form-label">이미지</label>
+                          <label for="image" class="custom-file-input">이미지</label>
                           <input type="file" name="image" class="form-control" id="image">
-                      </div>
-                      <div class="mb-3">
-                          <label class="form-label" for="pdf">사업자 등록증</label>
-                          <input type="file" name="pdf" class="form-control" id="pdf">
                       </div>
                       <!-- 에러 메시지 출력 -->
                       <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>
+                      <div class="mb-3">
+                          <label class="form-label" for="pdf">사업자 등록증</label>
+                          <input type="file" name="pdf" class="custom-file-input" id="pdf">
+                      </div>
                       <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
               </div>

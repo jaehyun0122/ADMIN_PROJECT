@@ -5,6 +5,7 @@ import com.example.finalproject.dto.user.UserRegisterDto;
 import com.example.finalproject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,14 +75,6 @@ public class MainController {
         return "/programmer/index";
     }
 
-    /**
-     * 유저 프로필 보기
-     * @return
-     */
-    @GetMapping("profile")
-    public String profile(){
-        return "/programmer/profile";
-    }
 
     /**
      * logout

@@ -1,8 +1,10 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.service.FindServiceDto;
+import com.example.finalproject.dto.service.QuestionDto;
 import com.example.finalproject.dto.service.ServiceRegisterDto;
 import com.example.finalproject.service.FileService;
+import com.example.finalproject.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,19 +20,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/service")
 public class ServiceController {
-
     private final FileService fileService;
+    private final QuestionService questionService;
+
     /**
      * 서비스 페이지
      * @return
      */
     @GetMapping()
-    public String viewService(Model model, Authentication authentication){
-
-        List<FindServiceDto> serviceList = fileService.getServiceList(authentication, null);
-
-        model.addAttribute("serviceList", serviceList);
-
+    public String viewService(){
         return "/programmer/service";
     }
 
@@ -54,7 +52,29 @@ public class ServiceController {
      * @return
      */
     @GetMapping("question")
-    public String question(){
+    public String question(Model model, Authentication authentication){
+
+        List<QuestionDto> questionList = questionService.getQuestionList(authentication);
+        model.addAttribute("questionList", questionList);
+
+        return "/programmer/question";
+    }
+
+    /**
+     * 문의 등록 페이지
+     */
+    @GetMapping("/question/register")
+    public String questionReg(){
+        return "/programmer/question_register";
+    }
+
+    /**
+     * 문의 등록
+     */
+    @PostMapping("/question/register")
+    public String registerQuestion(QuestionDto questionDto, Authentication authentication){
+        questionService.registerQuestion(authentication, questionDto);
+
         return "/programmer/question";
     }
 
@@ -82,4 +102,5 @@ public class ServiceController {
 
         return "/programmer/service_register";
     }
+
 }

@@ -4,6 +4,8 @@ import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.dto.user.UserRegisterDto;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -14,6 +16,9 @@ public interface UserMapper {
      * @return
      */
     int userRegister(UserRegisterDto user);
+
+    // 유저 상세 조회
+    UserDto getUserProfile(String email);
 
     /**
      *로그인 요청의 이메일이 존재하는 지 확인
@@ -40,4 +45,19 @@ public interface UserMapper {
      */
     void accountLock(String email);
 
+    /**
+     * 유저 이름 변경
+     */
+    int modifyUserName(Map<String, String> data);
+
+    /**
+     * 유저 비밀번호 변경
+     */
+    int modifyPassword(Map<String, String> data);
+
+    // admin 유저 목록 가져오기
+    List<UserDto> getUserList(String type);
+
+    // admin user 등록
+    int insertAdminUser(UserDto userDto);
 }

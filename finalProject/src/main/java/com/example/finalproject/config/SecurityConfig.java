@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers( "/login","/register","/").permitAll() // 해당 경로 접근 허용
             .antMatchers("/css/**","/js/**","/images/**").permitAll() // 해당 경로 접금 허용
-            .anyRequest().hasRole("USER") // 나머지 요청들은 USER 권한을 가지고 있어야 접근할 수 있다.
+            .anyRequest().access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')") // 나머지 요청들은 USER 이상 권한을 가지고 있어야 접근할 수 있다.
                 .and()
             .formLogin()
             .usernameParameter("email")

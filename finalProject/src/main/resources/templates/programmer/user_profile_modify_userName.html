@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>사용자 정보 변경</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<th:block th:replace="common/header :: navBar"/>
+
+<!--  wrapper -->
+<div class="container mt-4">
+  <!-- 테이블   -->
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <form action="#">
+            <div class="form-group">
+              <label for="userName" th:classappend="form-control" name="userName">이름</label>
+              <input type="text" name="userName" id="userName">
+            </div>
+            <button type="submit" id="submitBtn" class="btn btn-primary">수정</button>
+          </form>
+        </div>
+        <!-- End 테이블   -->
+      </div>
+      <!-- End wrapper -->
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+
+    $("#submitBtn").on("click", function (event) {
+      event.preventDefault();
+
+      // // 비밀번호 길이도 체크 해야됨
+      // if ($('input[name="password"]').val() !== $('input[name="passwordCheck"]').val()) {
+      //   $("#errorMsg").css("display", "block");
+      // } else {
+
+        let param = {
+          "userName": $('input[name="userName"]').val()
+        }
+        console.log(param)
+        $.ajax({
+          url: '/user/modify/userName',
+          method: "POST",
+          data: JSON.stringify(param),
+          contentType: "application/json; charset=utf-8",
+          dataType: 'json',
+          beforeSend: function(xhr) {
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            if (csrfHeader) {
+              xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+            }
+          },
+          success: function (data) {
+            alert("변경완료");
+            location.href = "/"
+          },
+          error: function () {
+            alert("서버 오류 입니다. 다시 시도해 주세요");
+          }
+        })
+
+    })
+
+  })
+</script>
+<style>
+  .table tr{
+    height: 100px;
+  }
+</style>
+</html>

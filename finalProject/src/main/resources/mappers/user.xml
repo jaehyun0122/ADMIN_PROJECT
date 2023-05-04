@@ -7,9 +7,7 @@
     <!--회원 가입-->
     <insert id="userRegister" parameterType="UserRegisterDto">
         INSERT INTO user(userName, email, phoneNo, password)
-        VALUES (
-                #{userName}, #{email}, #{phoneNo}, #{password}
-                )
+        VALUES (#{userName}, #{email}, #{phoneNo}, #{password})
     </insert>
 
     <!--회원 여부 확인-->
@@ -39,4 +37,45 @@
         SET isLock = 1
         WHERE email like #{email}
     </update>
+
+    <!--유저 정보 조회-->
+    <select id="getUserProfile" parameterType="string" resultType="UserDto">
+        SELECT email, userName, roles, isPermit, isLock, isQuit, isPause
+        FROM user
+        WHERE email like #{email}
+    </select>
+
+    <!--유저 비밀번호 수정-->
+    <update id="modifyPassword" parameterType="map">
+        UPDATE user
+        SET password = #{password}
+        WHERE email = #{email}
+    </update>
+
+    <!--유저 이름 수정-->
+    <update id="modifyUserName" parameterType="map">
+        UPDATE user
+        SET userName = #{userName}
+        WHERE email = #{email}
+    </update>
+
+    <!--유저 목록 가져오기-->
+    <!--type에 따라 user 또는 admin 사용자-->
+    <select id="getUserList" resultType="UserDto" parameterType="string">
+        SELECT email, userName, phoneNo, createdAt, roles, isPermit
+        FROM user
+        WHERE roles like
+              <if test="type == 'admin'">
+                'ROLE_ADMIN'
+              </if>
+              <if test="type == 'user'">
+                'ROLE_USER'
+              </if>
+    </select>
+
+    <!--admin 유저 등록-->
+    <insert id="insertAdminUser" parameterType="UserRegisterDto">
+        INSERT user(email, userName, phoneNo, password, isPermit, roles)
+        VALUES (#{email}, #{userName}, #{phoneNo}, #{password}, #{isPermit}, #{roles})
+    </insert>
 </mapper>
