@@ -5,41 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap Example</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<nav th:fragment="navBar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav id="main_nav" th:fragment="navBar" class="navbar navbar-expand-lg navbar-light bg-white shadow">
 
-    <div class="container">
+    <div class="container d-flex justify-content-between align-items-center">
         <!--USER 권한-->
-        <a sec:authorize="hasRole('ROLE_USER')" class="navbar-brand" th:href="@{/}">개발자 페이지</a>
+        <a sec:authorize="hasRole('ROLE_USER')" class="navbar-brand h1" th:href="@{/}">개발자 페이지</a>
         <!--ADMIN 권한-->
-        <a sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-brand" th:href="@{/}">관리자 페이지</a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-brand h1" th:href="@{/admin}">관리자 페이지</a>
+        <a sec:authorize="!isAuthenticated()" class="navbar-brand h1" href="/">
+            <i class='bx bx-buildings bx-sm text-dark'></i>
+            <span class="text-dark h4">Home</span>
+        </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!--토글 Button-->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-toggler-success" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse flex-row-reverse navbar-collapse" id="navbar-toggler-success">
+
+            <ul class="navbar-nav mr-auto flex-row-reverse">
                 <!--      로그인 X        -->
-
-                <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                           th:href="@{login}">로그인</a></li>
-                <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                           th:href="@{register}">회원가입</a></li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/login}">로그인</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/register}">회원가입</a>
+                </li>
                 <!--      END 로그인 X        -->
                 <!--      로그인 O        -->
-                <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                          th:href="@{/user/profile}"
-                                                                          th:text="|${#authentication.name}|"></a></li>
-                <li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                          th:href="@{logout}" th:text="로그아웃"></a></li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link btn-outline-infoprimary rounded-pill px-3" aria-current="page" th:href="@{/user/profile}" th:text="|${#authentication.name}|"></a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/logout}" th:text="로그아웃"></a>
+                </li>
                 <!--      END 로그인 O        -->
-
-                <li class="nav-item"><a class="nav-link" th:href="@{service}">서비스</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{service/question}">문의하기</a></li>
+                <li class="nav-item">
+                    <a class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service}">서비스</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service/question}">문의하기</a>
+                </li>
             </ul>
+
         </div>
+
     </div>
 </nav>
 

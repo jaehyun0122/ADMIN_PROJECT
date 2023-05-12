@@ -1,15 +1,16 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.service.FindServiceDto;
+import com.example.finalproject.dto.service.QuestionDto;
 import com.example.finalproject.dto.user.UserDto;
-import com.example.finalproject.exeption.ErrorMessageEnum;
-import com.example.finalproject.exeption.SqlFailException;
 import com.example.finalproject.service.AdminService;
 import com.example.finalproject.service.FileService;
+import com.example.finalproject.service.QuestionService;
 import com.example.finalproject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class AdminController {
 
     private final UserService userService;
     private final AdminService adminService;
+    private final QuestionService questionService;
     private final FileService fileService;
 
     // admin 페이지 리턴
@@ -60,18 +62,9 @@ public class AdminController {
         List<FindServiceDto> serviceList = fileService.getServiceList();
         model.addAttribute("serviceList", serviceList);
 
-        return "/admin/admin_service_list";
+        return "/programmer/service_list";
     }
 
-    // 서비스 상세 페이지
-    @GetMapping("service/detail")
-    public String serviceDetail(@RequestParam(name = "id") int id, Model model){
-        FindServiceDto serviceDetail = fileService.getServiceDetail(id);
-
-        model.addAttribute("serviceDetail", serviceDetail);
-
-        return "/admin/admin_service_detail";
-    }
 
     // 관리자 목록 페이지
     @GetMapping("admins")
@@ -93,7 +86,7 @@ public class AdminController {
         List<UserDto> userList = userService.getUserList("user");
         model.addAttribute("userList", userList);
 
-        return "/admin/admin_reg_request";
+        return "/admin/admin_reg_request_list";
     }
 
     // 가입 승인
@@ -159,7 +152,19 @@ public class AdminController {
     }
     // 문의 목록 페이지
     @GetMapping("question")
-    public String questionPage(){
-        return "";
+    public String questionPage(Model model){
+        List<QuestionDto> questions = questionService.getQuestion();
+        model.addAttribute("questionList", questions);
+
+        return "/programmer/question_list";
+    }
+
+    // 문의 답변 등록
+    @PostMapping("/question/answer")
+    @ResponseBody
+    public ResponseEntity<Boolean> questionAnswer(Authentication authentication, @RequestBody Map<String, Object> reqData){
+        questionService.insertAnswer(authentication, reqData);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

@@ -24,7 +24,7 @@
                       </div>
                       <div class="mb-3">
                           <label for="image" class="custom-file-input">이미지</label>
-                          <input type="file" name="image" class="form-control" id="image">
+                          <input type="file" name="image" class="form-control" id="image" multiple>
                       </div>
                       <!-- 에러 메시지 출력 -->
                       <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>

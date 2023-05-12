@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -17,9 +18,14 @@ import java.util.*;
 public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
+    // 회원 가입
     @Override
-    public void insertUser(UserRegisterDto user) {
+    public void insertUser(UserDto user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 회원 ROLE 설정
+        user.setRoles("ROLE_USER");
+
         userMapper.userRegister(user);
     }
 
@@ -56,7 +62,7 @@ public class UserServiceImpl implements UserService{
     public void modifyUserName(Authentication authentication, String userName) {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("email", authentication.getPrincipal().toString());
-        dataMap.put("userName", userName);
+        dataMap.put("name", userName);
 
         if(userMapper.modifyUserName(dataMap) != 1){
             throw new SqlFailException(ErrorMessageEnum.SQL_ERROR);
@@ -73,4 +79,15 @@ public class UserServiceImpl implements UserService{
 
         return findAdminList.get();
     }
+
+    // 최근 접속일 설정
+    @Override
+    public void setLastLoginDate(Authentication authentication) {
+        Map<String, Object> reqData = new HashMap<>();
+        reqData.put("email", authentication.getPrincipal().toString());
+        reqData.put("lastLoginDate", LocalDateTime.now());
+
+        userMapper.updateLastLoginDate(reqData);
+    }
+
 }

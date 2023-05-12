@@ -5,14 +5,20 @@
 <mapper namespace="com.example.finalproject.mapper.UserMapper">
 
     <!--회원 가입-->
-    <insert id="userRegister" parameterType="UserRegisterDto">
-        INSERT INTO user(userName, email, phoneNo, password)
-        VALUES (#{userName}, #{email}, #{phoneNo}, #{password})
+    <insert id="userRegister" parameterType="UserDto">
+        INSERT INTO user(name, email, phoneNo, password, roles)
+        VALUES (#{name}, #{email}, #{phoneNo}, #{password}, #{roles})
+    </insert>
+
+    <!--admin 유저 등록-->
+    <insert id="insertAdminUser" parameterType="UserRegisterDto">
+        INSERT user(email, name, phoneNo, password, isPermit, roles)
+        VALUES (#{email}, #{name}, #{phoneNo}, #{password}, #{isPermit}, #{roles})
     </insert>
 
     <!--회원 여부 확인-->
     <select id="isMember" resultType="UserDto" parameterType="string">
-        SELECT email, userName, password, isPermit, isLock, isPause, isQuit, roles, passwordChangeDate, lastLoginDate
+        SELECT email, name, password, isPermit, isLock, isPause, isQuit, roles, passwordChangeDate, lastLoginDate
         FROM user
         WHERE email like #{email}
     </select>
@@ -40,29 +46,29 @@
 
     <!--유저 정보 조회-->
     <select id="getUserProfile" parameterType="string" resultType="UserDto">
-        SELECT email, userName, roles, isPermit, isLock, isQuit, isPause
+        SELECT email, name, roles, isPermit, isLock, isQuit, isPause, phoneNo, createdAt, passwordChangeDate, lastLoginDate
         FROM user
         WHERE email like #{email}
     </select>
 
-    <!--유저 비밀번호 수정-->
+    <!--유저 비밀번호 수정 & 비밀번호 수정일 설정-->
     <update id="modifyPassword" parameterType="map">
         UPDATE user
-        SET password = #{password}
+        SET password = #{password}, passwordChangeDate = NOW()
         WHERE email = #{email}
     </update>
 
     <!--유저 이름 수정-->
     <update id="modifyUserName" parameterType="map">
         UPDATE user
-        SET userName = #{userName}
+        SET name = #{name}
         WHERE email = #{email}
     </update>
 
     <!--유저 목록 가져오기-->
     <!--type에 따라 user 또는 admin 사용자-->
     <select id="getUserList" resultType="UserDto" parameterType="string">
-        SELECT email, userName, phoneNo, createdAt, roles, isPermit
+        SELECT email, name, phoneNo, createdAt, roles, isPermit
         FROM user
         WHERE roles like
               <if test="type == 'admin'">
@@ -73,9 +79,11 @@
               </if>
     </select>
 
-    <!--admin 유저 등록-->
-    <insert id="insertAdminUser" parameterType="UserRegisterDto">
-        INSERT user(email, userName, phoneNo, password, isPermit, roles)
-        VALUES (#{email}, #{userName}, #{phoneNo}, #{password}, #{isPermit}, #{roles})
-    </insert>
+    <!--최근 접속일 갱신-->
+    <update id="updateLastLoginDate" parameterType="string">
+        UPDATE user
+        SET lastLoginDate = NOW()
+        WHERE email like #{email}
+    </update>
+
 </mapper>

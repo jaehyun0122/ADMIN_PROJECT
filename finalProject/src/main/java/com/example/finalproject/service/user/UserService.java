@@ -2,6 +2,7 @@ package com.example.finalproject.service.user;
 
 import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.dto.user.UserRegisterDto;
+import org.apache.catalina.User;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface UserService {
      * 회원 가입 처리
      * @param user
      */
-    void insertUser(UserRegisterDto user);
+    void insertUser(UserDto user);
 
     // 유저 상세 정보 조회
     UserDto getUserProfile(String email);
@@ -25,4 +26,7 @@ public interface UserService {
 
     // admin or user 목록 가져오기
     List<UserDto> getUserList(String type);
+
+    // 최근 접속일 설정
+    void setLastLoginDate(Authentication authentication);
 }

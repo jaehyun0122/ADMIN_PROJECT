@@ -10,21 +10,26 @@ public class MaskedNameConverter extends ClassicConverter {
     @Override
     public String convert(ILoggingEvent event) {
         String message = event.getMessage();
+
+        if(message.startsWith(">") || message.startsWith("<")){
+            return message;
+        }
+
         String[] parts = message.split(",");
         String userName = parts[0].trim();
         String phoneNo = parts[1].trim();
 
         StringBuilder sb = new StringBuilder();
         // userName 마스킹 처리
-        // 첫 글자 + * 중간 글자 + 마지막 글자
+        // 첫 글자 + * + 마지막 글자
+        sb.append("이름 : ");
         sb.append(userName.charAt(0))
-                .append("*".repeat(userName.substring(0, userName.length()-1).length()))
-                .append(userName.charAt(userName.length() - 2));
-
-        sb.append(",");
+                .append("*".repeat(userName.substring(1, userName.length()-1).length()))
+                .append(userName.charAt(userName.length() - 1));
 
         // phoneNo 마스킹 처리
         // 010 + **** + 뒷 번호
+        sb.append("  전화번호 : ");
         sb.append(phoneNo.substring(0, 3))
                 .append("****")
                 .append(phoneNo.substring(7, phoneNo.length()));

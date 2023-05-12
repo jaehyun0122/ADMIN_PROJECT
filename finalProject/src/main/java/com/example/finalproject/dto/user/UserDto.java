@@ -1,6 +1,5 @@
 package com.example.finalproject.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,10 +13,10 @@ import java.util.Collection;
 @Data
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto implements UserDetails {
-    private String userName;
     private String phoneNo;
     private String email;
     private String password;
+    private String name;
     private boolean isLock; // 계정 잠김 여부. 비밀번호 5회 이상 틀릴 시 잠김.
     private boolean isPause; // 계정 중지 여부.
     private boolean isQuit; // 계정 탈퇴 여부.
@@ -71,16 +70,16 @@ public class UserDto implements UserDetails {
 
         // 로그인 기록 없다면 로그인 가능
         if(this.lastLoginDate == null) {
-            return false;
-        }
-
-        Duration duration = Duration.between(now, this.lastLoginDate);
-        // 로그인 후 90일 지나면 로그인 불가
-        if(Math.abs(duration.toDays()) > 90){
             return true;
         }
 
-        return false;
+        Duration duration = Duration.between(now, this.passwordChangeDate);
+        // 로그인 후 90일 지나면 로그인 불가
+        if(Math.abs(duration.toDays()) > 90){
+            return false;
+        }
+
+        return true;
     }
 
     @Override

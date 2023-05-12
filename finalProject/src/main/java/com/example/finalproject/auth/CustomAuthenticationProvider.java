@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * 로그인 시도할 때 계정의 유효성 검사 ( 패스워드 일치, 계정 잠김, 중지, 탈퇴, 승인 )
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -25,11 +28,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        System.out.println(email);
+
         // 로그인 시도 아이디 존재 여부 확인 후
-        // 없으면 에러
         UserDto userDto = userMapper.isMember(email)
-                .orElseThrow(() -> new BadCredentialsException("해당 사용자가 없습니다."));
+                .orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다."));
+
+        // 패스워드 일치 여부 확인
+        if (!passwordEncoder.matches(password, userDto.getPassword())) {
+            // 비밀번호 틀린 횟수 카운트
+            userMapper.passwordCount(userDto.getEmail());
+
+            // 틀린 횟수 5회 이상이면 계정 잠김 설정
+            if(userMapper.getPasswordCount(userDto.getEmail()) >= 5){
+                userMapper.accountLock(userDto.getEmail());
+            }
+
+            throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
 
         // 계정 잠김 여부 확인
         if (userDto.isLock()) {
@@ -50,25 +65,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if(!userDto.isPermit()){
             throw new DisabledException("관리자의 승인이 필요합니다.");
         }
-
-        // 패스워드 변경 후 90일 지났는지 확인
-        if(userDto.isCredentialsNonExpired()){
-            throw new CredentialsExpiredException("비밀번호 사용 후 90일이 지났습니다. 변경 후 사용해주세요");
-        }
-
-        // 패스워드 일치 여부 확인
-        if (!passwordEncoder.matches(password, userDto.getPassword())) {
-            // 비밀번호 틀린 횟수 카운트
-            userMapper.passwordCount(userDto.getEmail());
-
-            // 틀린 횟수 5회 이상이면 계정 잠김 설정
-            if(userMapper.getPasswordCount(userDto.getEmail()) >= 5){
-                userMapper.accountLock(userDto.getEmail());
-            }
-
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-        }
-
 
         // 계정 권한 가져오기
         Collection<GrantedAuthority> authorities = new ArrayList<>();

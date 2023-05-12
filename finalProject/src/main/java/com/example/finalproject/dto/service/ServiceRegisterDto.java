@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Data
 public class ServiceRegisterDto {
+    private int id;
     private String companyName;
     private String companyNo;
     private String email;

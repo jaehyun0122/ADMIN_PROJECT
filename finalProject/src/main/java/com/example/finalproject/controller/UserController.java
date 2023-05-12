@@ -3,6 +3,10 @@ package com.example.finalproject.controller;
 import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     /**
      * 유저 프로필 보기
@@ -49,10 +54,10 @@ public class UserController {
      */
     @PostMapping("/modify/password")
     @ResponseBody
-    public String modifyPassword(Authentication authentication, Model model, @RequestBody Map<String, String> reqData){
+    public ResponseEntity<Boolean> modifyPassword(Authentication authentication, Model model, @RequestBody Map<String, String> reqData){
         userService.modifyPassword(authentication, reqData.get("password"));
 
-        return "/programmer/user_profile_modify_password";
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     /**
@@ -60,9 +65,9 @@ public class UserController {
      */
     @PostMapping("/modify/userName")
     @ResponseBody
-    public String modifyUserName(Authentication authentication, Model model, @RequestBody Map<String, String> reqData){
+    public ResponseEntity<Boolean> modifyUserName(Authentication authentication, Model model, @RequestBody Map<String, String> reqData){
         userService.modifyUserName(authentication, reqData.get("userName"));
 
-        return "/programmer/user_profile_modify_password";
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

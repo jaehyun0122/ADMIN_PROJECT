@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- STDOUT(콘솔에 로그를 출력) -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>   <!--날짜 시간 패턴         쓰레드이름 로그레벨 로거이름길이 메시지 개행-->
+            <pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Query Loggers -->
+    <logger name="jdbc" level="OFF"/>
+    <logger name="jdbc.sqlonly" level="OFF"/> <!--SQL 쿼리 문장만 로그로 남김 -->
+    <logger name="jdbc.sqltiming" level="DEBUG"/>   <!--SQL 쿼리, 실행 시간-->
+    <logger name="jdbc.audit" level="OFF"/> <!--ResultSet 제외한 모든 JDBC 호출 정보-->
+    <logger name="jdbc.resultset" level="OFF"/> <!--ResultSet을 포함한 모든 JDBC 호출 정보-->
+    <logger name="jdbc.resultsettable" level="DEBUG"/>  <!--SQL 결과 조회된 데이터를 테이블 형태-->
+    <logger name="jdbc.connection" level="OFF"/>    <!--DB 연결, 해제 관련 정보-->
+    <!-- Query Loggers -->
+
+    <!--개인 정보 마스킹-->
+    <!--유저 이름, 전화 번호 마스킹 처리 위한 conversionRule-->
+    <conversionRule conversionWord="masked" converterClass="com.example.finalproject.config.MaskedNameConverter" />
+    <!-- 유저 이름, 전화 번호 appender. appender를 사용해 특정 부분에서만 사용 가능. -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %masked{ %msg }%n</pattern>
+        </encoder>
+    </appender>
+    <!--로그인 시 유저 이름, 전화번호 로그에 마스킹 처리-->
+    <logger name="com.example.finalproject.auth.AuthSuccessHandler" level="INFO" additivity="false">
+        <appender-ref ref="consoleAppender" />
+    </logger>
+    <!--개인 정보 마스킹-->
+
+</configuration>

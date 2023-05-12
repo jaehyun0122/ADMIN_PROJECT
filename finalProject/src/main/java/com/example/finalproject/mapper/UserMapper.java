@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Mapper
@@ -15,7 +16,7 @@ public interface UserMapper {
      * @param user
      * @return
      */
-    int userRegister(UserRegisterDto user);
+    int userRegister(UserDto user);
 
     // 유저 상세 조회
     UserDto getUserProfile(String email);
@@ -60,4 +61,7 @@ public interface UserMapper {
 
     // admin user 등록
     int insertAdminUser(UserDto userDto);
+
+    // 최근 접속일 설정
+    int updateLastLoginDate(Map<String, Object> reqData);
 }

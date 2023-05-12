@@ -4,7 +4,6 @@ import com.example.finalproject.auth.AuthFailHandler;
 import com.example.finalproject.auth.AuthSuccessHandler;
 import com.example.finalproject.auth.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -25,13 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthFailHandler failHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//            .sessionManagement() // 세션 타임을 yml에 직접 설정. 기본값 30분
-//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 정첵
-//                .invalidSessionUrl("/logout")
-//                .maximumSessions(1)
-//                .expiredUrl("/logout")
-//                .maxSessionsPreventsLogin(true);
+        http
+                .sessionManagement()
+                .maximumSessions(1)
+                .expiredUrl("/");
         http
             .authorizeRequests()
             .antMatchers( "/login","/register","/").permitAll() // 해당 경로 접근 허용
@@ -41,31 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .usernameParameter("email")
             .loginPage("/login") // security에서 제공하는 로그인 페이지 안 쓰려면 controller에 등록한 url 써주면 됨.
-            .successHandler(successHandler)
-            .failureHandler(failHandler)
+            .successHandler(successHandler) // 로그인 성공 시 실행 로직
+            .failureHandler(failHandler) // 로그인 실패 시 실행 로직
                 .and()
             .logout()
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // security에서 제공하는 기본 로그아웃페이지 말고
             .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 페이지
             .invalidateHttpSession(true); // HTTP 세션 초기화
-    }
-
-    /**
-     * HttpSession 생성, 소멸 이벤트 처리
-     * @return
-     */
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
-
-    /**
-     * httpSessionEventPublisher를 Servlet 컨테이너에 등록
-     * @return
-     */
-    @Bean
-    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisherRegistration() {
-        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
     }
 
     /**

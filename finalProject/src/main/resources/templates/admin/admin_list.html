@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -16,7 +16,7 @@
   <!--등록 버튼-->
   <div class="d-flex flex-row-reverse">
 
-    <div style="padding: 10px">
+    <div style="padding: 10px" sec:authorize="hasRole('ROLE_SUPER')">
       <a type="button" class="btn btn-secondary" th:href="@{/admin/register}">등록</a>
     </div>
 
@@ -41,7 +41,7 @@
         <tr th:each="admin, index : ${adminList}" th:onclick="goDetail([[${admin.email}]])" style="cursor: pointer">
           <td th:text="${index.index+1}"></td>
           <td th:text="${admin.email}"></td>
-          <td th:text="${admin.username}"></td>
+          <td th:text="${admin.name}"></td>
           <td th:text="${admin.phoneNo}"></td>
           <td th:text="${admin.createdAt}"></td>
         </tr>

@@ -4,8 +4,6 @@ import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,7 +36,7 @@ public class PrincipalDetailsService implements UserDetailsService {
             // enabled(계정활성화), accountNonExpired(계정 만료), credentialsNonExpired(자격증명 만료. 비밀번호 등)
             // accountNonLocked(계정 잠김), authorities(권한)
             return new User(userDto.getEmail(), userDto.getPassword(),
-                    userDto.isEnabled(), true, true,
+                    userDto.isEnabled(), true, userDto.isCredentialsNonExpired(),
                     userDto.isLock(), userDto.getAuthorities());
         }
         else {

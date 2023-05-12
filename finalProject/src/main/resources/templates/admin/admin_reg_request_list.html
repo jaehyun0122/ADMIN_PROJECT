@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>서비스</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+<th:block th:replace="common/admin_header :: adminNavBar"/>
+
+<!--  wrapper -->
+<div class="container my-5">
+  <!--정렬, 등록 버튼-->
+  <div class="d-flex flex-row-reverse">
+  <!--사용자 이름 검색창-->
+    <div id="input-form">
+      이름 : <input type="text" id="keyword" />
+    </div>
+
+    <div style="padding: 10px">
+      <select id="sortSelect" class="form-select form-select-sm" aria-label=".form-select-sm example">
+        <option value="전체" selected>전체</option>
+        <option value="승인">승인</option>
+        <option value="미승인">미승인</option>
+      </select>
+    </div>
+
+  </div>
+  <!-- End 정렬, 등록 버튼-->
+  <!-- 테이블   -->
+  <div class="row justify-content-center">
+    <table id="adminTable" class="table">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">이메일</th>
+        <th scope="col">사용자 이름</th>
+        <th scope="col">승인 여부</th>
+        <th scope="col">요청 일시</th>
+      </tr>
+      </thead>
+      <tbody id="body">
+      <tr th:each="admin, index : ${userList}" style="cursor: pointer">
+        <td th:text="${index.index+1}"></td>
+        <td id="email" th:text="${admin.email}"></td>
+        <td th:text="${admin.name}" th:onclick="goDetail([[${admin.email}]])"></td>
+        <td th:if="${admin.isPermit() == true}" th:text="승인"></td>
+        <td th:if="${admin.isPermit() == false}" th:text="미승인"></td>
+        <td th:text="${admin.createdAt}"></td>
+        <td th:if="${admin.isPermit() == false}"><button id="ok" class="btn btn-secondary">승인</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- End 테이블   -->
+</div>
+<!-- End wrapper -->
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+  // 유저 상세 페이지 요청 함수
+  function goDetail(email){
+    window.location.href="/admin/detail?email="+email;
+  }
+
+  $(document).ready(function (){
+
+    /*이름 검색 기능*/
+    $("#keyword").keyup(function (){
+      let word = $(this).val();
+      $("#adminTable > tbody > tr").hide();
+      // td:nth-child => 3번째요소에 word가 포함된것만 보여줌
+      // 요소의 인덱스는 1부터 시작
+      let isPermit = $("#sortSelect").val();
+      let temp = $("#adminTable > tbody > tr > td:nth-child(3):contains('"+word+"')");
+
+      if(isPermit !== "전체"){
+        temp = $("#adminTable > tbody > tr").filter(function() { // filter는 true만 반환
+          return ($(this).find("td:nth-child(3):contains('"+word+"')").length > 0 && $(this).find("td:nth-child(4)").text() == isPermit);
+        });
+        temp.show()
+        return;
+      }
+
+      $(temp).parent().show();
+    })
+    /*END 이름 검색 기능*/
+
+    /*select box 검색*/
+    $("#sortSelect").on("change", function (){
+      let isPermit = $(this).val();
+      // 전체 보기 경우
+      if(isPermit === "전체"){
+        $("#adminTable > tbody > tr > td:nth-child(3):contains('')").parent().show();
+        return;
+      }
+
+      $("#adminTable > tbody > tr").hide();
+
+      $("#adminTable > tbody > tr > td:nth-child(4)").filter(function() {
+        return $(this).text() === isPermit;
+      }).parent().show();
+    })
+    /*End select box 검색*/
+
+  })
+
+  /*가입 승인 요청*/
+  $("#ok").on("click", function (){
+    $.ajax({
+      method: "POST",
+      url: "/admin/regPermit",
+      data: JSON.stringify({email:$("#email").text()}),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      beforeSend: function(xhr) {
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        if (csrfHeader) {
+          xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+        }
+      },
+      success: function (response){
+        location.href = "/admin/reg";
+      },
+      error: function (){
+        alert("요청 실패");
+      }
+    })
+  })
+  /*End 가입 승인 요청*/
+</script>
+</html>

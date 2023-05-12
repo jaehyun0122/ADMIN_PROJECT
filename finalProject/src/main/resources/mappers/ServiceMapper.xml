@@ -5,18 +5,25 @@
 <mapper namespace="com.example.finalproject.mapper.ServiceMapper">
 
     <!--서비스 등록 요청-->
-    <!--파라미터 : serviceInfo(등록 정보), fileInfo(이미지, pdf를 바이너르 형태로 변환)-->
-    <!--BLOB 타입 : 대형 이진 객체 저장 타입. 이미지, 오디오, 비디오 등 멀티미디어 파일을 저장하는데 사용-->
-    <insert id="serviceRegister" parameterType="map">
-        INSERT INTO service(email, companyName, companyNo, image, pdf, originImgName, originPdfName)
-        VALUES (#{serviceInfo.email}, #{serviceInfo.companyName}, #{serviceInfo.companyNo}, #{fileInfo.imageByte, jdbcType=BLOB}, #{fileInfo.pdfByte, jdbcType=BLOB}, #{serviceInfo.originImgName}, #{serviceInfo.originPdfName})
+    <!--userGeneratedKeys : insert 작업 후 keyProperty id를 반환-->
+    <!--해당 서비스의 File을 file 테이블에서 외래키 연결을 위해-->
+    <insert id="serviceRegister" parameterType="ServiceRegisterDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO service(email, companyName, companyNo)
+        VALUES (#{email}, #{companyName}, #{companyNo})
     </insert>
 
-    <!--서비스 목록 가져오기-->
+    <!--파일 업로드-->
+    <!--BLOB 타입 : 대형 이진 객체 저장 타입. 이미지, 오디오, 비디오 등 멀티미디어 파일을 저장하는데 사용-->
+    <insert id="uploadFile" parameterType="map">
+        INSERT INTO file (fileName, fileByte, serviceId, type)
+        VALUES (#{fileName}, #{fileByte}, #{servicePk}, #{type})
+    </insert>
+
+    <!--로그인 유저 서비스 목록 가져오기-->
     <!--파라미터 : 유저 이메일-->
     <!--resultType : 등록 정보-->
     <select id="getServiceList" parameterType="map" resultType="FindServiceDto">
-        SELECT email, companyName, companyNo, isPermit as isPermit, permitAt, regAt, image, pdf, originImgName, originPdfName
+        SELECT id, email, companyName, companyNo, isPermit, confirmAt, regAt
         FROM service
         WHERE email = #{email}
           /*전체 목록 아닐 때만 상태값에 따른 조건문 실행*/
@@ -27,15 +34,71 @@
 
     <!--모든 서비스 목록-->
     <select id="allServiceList" resultType="FindServiceDto">
-        SELECT id, email, companyName, companyNo, isPermit as isPermit, permitAt, regAt, image, pdf, originImgName, originPdfName
+        SELECT id, email, regUser, companyName, companyNo, isPermit, confirmAt, regAt
         FROM service
     </select>
 
     <!--서비스 상세 정보-->
     <select id="getServiceDetail" parameterType="Integer" resultType="FindServiceDto">
-        SELECT id, email, companyName, companyNo, image, pdf, originImgName, originPdfName, isPermit, regAt, permitAt, negativeComment
+        SELECT id, email, companyName, companyNo, isPermit, regAt, confirmAt, negativeComment,
+               (select name from user where email like service.email) as name
         FROM service
         WHERE id = #{id}
     </select>
+
+    <!--메일 발송을 위한 서비스 등록자 이메일 가져오기-->
+    <select id="getServiceRegUser" parameterType="Integer" resultType="string">
+        SELECT email
+        FROM service
+        WHERE id = #{id}
+    </select>
+
+    <!--file download-->
+    <select id="getFile" parameterType="map" resultType="findFileDto">
+        SELECT id, fileByte, fileName, type
+        FROM file
+        WHERE id = #{id}
+    </select>
+
+    <!--serviceId에 해당하는 file List 가져오기-->
+    <select id="getFileList" parameterType="Integer" resultType="FindFileDto">
+        SELECT id, fileName, fileByte, type
+        FROM file
+        WHERE serviceId = #{id}
+    </select>
+
+    <!--서비스 승인-->
+    <update id="updateIsPermit" parameterType="map">
+        UPDATE service
+        SET isPermit = 1, confirmAt = #{confirmAt}
+        WHERE id = #{id}
+    </update>
+
+    <!--서비스 승인 후 키값 저장-->
+    <insert id="insertKey" parameterType="map">
+        INSERT INTO service_key(serviceId, encryptKey, contactKey)
+        VALUES (#{serviceId}, #{encryptKey}, #{contactKey})
+    </insert>
+
+    <!--서비스 키 존재 여부 확인-->
+    <select id="isRegServiceKey" parameterType="Integer" resultType="boolean">
+        select EXISTS(
+            select 1 from service_key where serviceId=#{serviceId}
+            ) as exist_flag;
+    </select>
+
+    <!--서비스 키 존재 시 업데이트-->
+    <update id="updateServiceKey" parameterType="map">
+        UPDATE service_key
+        SET encryptKey = #{encryptKey}, contactKey = #{contactKey}
+        WHERE serviceId = #{serviceId}
+    </update>
+
+    <!--서비스 반려 isPermit = 2-->
+    <update id="denyService" parameterType="map">
+        UPDATE service
+        SET isPermit = 2, negativeComment = #{negativeComment}, confirmAt = #{confirmAt}, regUser = #{regUser}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

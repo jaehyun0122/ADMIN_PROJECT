@@ -2,10 +2,12 @@ package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.user.UserDto;
 import com.example.finalproject.dto.user.UserRegisterDto;
+import com.example.finalproject.service.MailService;
 import com.example.finalproject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
-//    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     private final UserService userService;
+
     /**
      * main page
      * @return
@@ -48,7 +50,7 @@ public class MainController {
      */
     @GetMapping("register")
     public String register(){
-        return "/programmer/register";
+        return "/programmer/user_register";
     }
 
     /**
@@ -65,12 +67,8 @@ public class MainController {
      * @return
      */
     @PostMapping("register")
-    public String userRegister(Model model, UserRegisterDto user){
-//        logger.info(">>> 회원 가입 요청");
-//        logger.info(user.getUserName()+","+user.getPhoneNo());
+    public String userRegister(Model model, UserDto user){
         userService.insertUser(user);
-
-//        logger.info("<<< 회원 가입 요청");
 
         return "/programmer/index";
     }

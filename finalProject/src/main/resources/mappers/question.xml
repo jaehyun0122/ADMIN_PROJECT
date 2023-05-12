@@ -17,4 +17,37 @@
         VALUES (#{email},#{title}, #{content})
     </insert>
 
+    <!--문의 상세 정보-->
+    <select id="getQuestionDetail" parameterType="Integer" resultType="QuestionDto">
+        SELECT id, email, title, content, isAnswer, regAt
+        FROM question
+        WHERE id = #{id}
+    </select>
+
+    <!--admin용 문의 내역 가져오기-->
+    <select id="getQuestion" resultType="QuestionDto">
+        SELECT id, email, title, content, isAnswer, regAt
+        FROM question
+    </select>
+
+    <!--문의 답변 등록-->
+    <insert id="insertAnswer" parameterType="map">
+        INSERT INTO question_answer(questionId, answer, regUser)
+        VALUES (#{questionId}, #{answer}, #{regUser})
+    </insert>
+
+    <!--문의 내역 답변 플래그 변경-->
+    <update id="updateIsAnswer" parameterType="Object">
+        UPDATE question
+        SET isAnswer = 1
+        WHERE id = #{questionId}
+    </update>
+
+    <!--해당 질문 답변 리스트 가져오기-->
+    <select id="getAnswerList" parameterType="Integer" resultType="QuestionAnswerDto">
+        SELECT id, answer, regUser
+        FROM question_answer
+        WHERE questionId = #{id}
+    </select>
+
 </mapper>
