@@ -12,59 +12,58 @@
 <!--  wrapper -->
 <div class="container mt-4">
     <!-- 테이블   -->
+
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-floating">
-                                <label for="floatingemail">Email</label>
-                                <input type="email" class="form-control form-control-lg light-300" id="floatingemail" name="email" disabled th:placeholder="${userProfile.email}">
+                            <div class="input-group mb-3">
+                                <input disabled th:placeholder="${userProfile.email}" type="text" class="form-control form-control-lg light-300" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
                             </div>
                         </div><!-- End Input Subject -->
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="form-floating mb-3">
-                                <label for="floatingpassword">이름</label>
-                                <a th:href="@{/user/modify/userName}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
-                                    </svg>
-                                </a>
-                                <input class="form-control light-300" rows="8" placeholder="Password" name="password" id="floatingpassword" disabled
-                                       th:placeholder="${userProfile.name}"/>
+                        <div class="col-8">
+                            <div class="input-group mb-3">
+                                <div class="input-group mb-3">
+                                    <label for="floatingpassword">이름</label>
+                                    <input disabled th:placeholder="${userProfile.name}" type="text" class="form-control form-control-lg light-300" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <a th:href="@{/user/modify/userName}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                             class="bi bi-pen" viewBox="0 0 16 16">
+                                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </div><!-- End Textarea Message -->
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="form-floating mb-3">
+                        <div class="col-8">
+                            <div class="input-group mb-3">
                                 <label for="floatingpassword">Password</label>
+                                <input id="floatingpassword" disabled th:placeholder="${'****'}" type="text" class="form-control form-control-lg light-300" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                 <a th:href="@{/user/modify/password}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-pen" viewBox="0 0 16 16">
                                         <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
                                     </svg>
                                 </a>
-                                <input class="form-control light-300" rows="8" placeholder="Password" name="password" id="floatingpassword" disabled th:placeholder="'*****'" />
                             </div>
                         </div><!-- End Textarea Message -->
                     </div>
 
-                <!-- End 테이블   -->
+                    <!-- End 테이블   -->
+                </div>
+                <!-- End wrapper -->
             </div>
-            <!-- End wrapper -->
         </div>
     </div>
 </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<style>
-  .table tr{
-    height: 100px;
-  }
-</style>
 </html>

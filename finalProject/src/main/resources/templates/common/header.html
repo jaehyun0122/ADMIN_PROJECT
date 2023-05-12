@@ -30,10 +30,10 @@
             <ul class="navbar-nav mr-auto flex-row-reverse">
                 <!--      로그인 X        -->
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
-                    <a class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/login}">로그인</a>
+                    <a id="login" class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/login}">로그인</a>
                 </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
-                    <a class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/register}">회원가입</a>
+                    <a id="register" class="nav-link btn-outline-info rounded-pill px-3" aria-current="page" th:href="@{/register}">회원가입</a>
                 </li>
                 <!--      END 로그인 X        -->
                 <!--      로그인 O        -->
@@ -45,10 +45,10 @@
                 </li>
                 <!--      END 로그인 O        -->
                 <li class="nav-item">
-                    <a class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service}">서비스</a>
+                    <a id="service" class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service}">서비스</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service/question}">문의하기</a>
+                    <a id="question" class="nav-link btn-outline-info rounded-pill px-3" th:href="@{/service/question}">문의하기</a>
                 </li>
             </ul>
 
