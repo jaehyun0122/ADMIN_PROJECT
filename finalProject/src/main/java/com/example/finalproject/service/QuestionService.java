@@ -17,7 +17,10 @@ public interface QuestionService {
     QuestionDto getQuestionDetail(int id);
 
     // admin 문의 내용 가져오기
-    List<QuestionDto> getQuestion();
+    List<QuestionDto> getQuestion(int page, int pagePerData);
+
+    // 모든 문의 내역 개수 가져오기
+    int getQuestionCount();
 
     // 문의 답변 등록
     void insertAnswer(Authentication authentication, Map<String, Object> reqData);

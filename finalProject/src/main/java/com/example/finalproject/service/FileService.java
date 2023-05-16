@@ -21,12 +21,12 @@ public interface FileService {
     // 서비스 목록 가져오기
     List<FindServiceDto> getServiceList(Authentication authentication, String status);
 
-    // 등록 서비스 목록 가져오기
-    // type : all - 모두, 승인 - 승인 서비스, 미승인 - 미승인 서비스
-    List<FindServiceDto> getServiceList(String type);
 
-    // 모든 서비스 목록
-    List<FindServiceDto> getServiceList();
+    // 해당 페이지 서비스 가져오기
+    List<FindServiceDto> getServiceList(int page, int pagePerData);
+
+    // 모든 서비스 개수 가져오기
+    int getListSize();
 
     // 서비스 상세 정보
     FindServiceDto getServiceDetail(int id);

@@ -18,8 +18,11 @@ public interface ServiceMapper {
     // 검색에 맞는 등록 서비스 가져오기.
     List<FindServiceDto> getService(String type);
 
-    // 모든 등록 서비스 가져오기
-    List<FindServiceDto> allServiceList();
+    // 해당 페이지 데이터 가져오기
+    List<FindServiceDto> allServiceList(Map<String, Integer> map);
+
+    // 모든 서비스 개수 가져오기
+    int getListSize();
 
     // 서비스 상세 목록
     FindServiceDto getServiceDetail(int id);

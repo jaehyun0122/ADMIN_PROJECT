@@ -57,7 +57,11 @@ public interface UserMapper {
     int modifyPassword(Map<String, String> data);
 
     // admin 유저 목록 가져오기
-    List<UserDto> getUserList(String type);
+    List<UserDto> getUserList(Map<String, Object> map);
+
+
+    // admin or user 인원 수 가져오기
+    int getUserCount(String type);
 
     // admin user 등록
     int insertAdminUser(UserDto userDto);

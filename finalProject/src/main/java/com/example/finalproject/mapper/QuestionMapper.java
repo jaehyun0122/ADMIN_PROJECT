@@ -11,6 +11,9 @@ public interface QuestionMapper {
     // 문의 내용 전부 리턴
     List<QuestionDto> getQuestionList(String email);
 
+    // 모든 문의 내역 개수 가져오기
+    int getQuestionCount();
+
     // 문의 등록
     int registerQuestion(QuestionDto questionDto);
 
@@ -18,7 +21,7 @@ public interface QuestionMapper {
     QuestionDto getQuestionDetail(int id);
 
     // admin 문의 내역 가져오기
-    List<QuestionDto> getQuestion();
+    List<QuestionDto> getQuestion(Map<String, Integer> map);
 
     // 문의 답변 등록
     int insertAnswer(Map<String, Object> reqData);

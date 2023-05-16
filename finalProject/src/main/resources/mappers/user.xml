@@ -67,16 +67,25 @@
 
     <!--유저 목록 가져오기-->
     <!--type에 따라 user 또는 admin 사용자-->
-    <select id="getUserList" resultType="UserDto" parameterType="string">
+    <select id="getUserList" resultType="UserDto" parameterType="map">
         SELECT email, name, phoneNo, createdAt, roles, isPermit
         FROM user
         WHERE roles like
               <if test="type == 'admin'">
-                'ROLE_ADMIN'
+                '%ROLE_ADMIN%'
               </if>
               <if test="type == 'user'">
                 'ROLE_USER'
               </if>
+        limit #{pagePerData}
+        offset #{offset}
+    </select>
+
+    <!--일반 사용자 || 관리자 총 인원 가져오기. 페이지 버튼 만들기 위해-->
+    <select id="getUserCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM user
+        WHERE roles like #{type}
     </select>
 
     <!--최근 접속일 갱신-->

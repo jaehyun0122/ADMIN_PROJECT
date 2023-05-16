@@ -55,12 +55,21 @@ public class QuestionServiceImpl implements QuestionService{
 
     // admin용 문의 내역 가져오기
     @Override
-    public List<QuestionDto> getQuestion() {
-        return questionMapper.getQuestion();
+    public List<QuestionDto> getQuestion(int page, int pagePerData) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("pagePerData", pagePerData);
+        map.put("offset", page * pagePerData);
+
+        return questionMapper.getQuestion(map);
+    }
+
+    // 모든 문의 내역 개수 가져오기
+    @Override
+    public int getQuestionCount() {
+        return questionMapper.getQuestionCount();
     }
 
     // 문의 답변 등록
-
     @Override
     public void insertAnswer(Authentication authentication, Map<String, Object> reqData) {
         reqData.put("regUser", authentication.getPrincipal().toString());

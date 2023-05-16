@@ -32,9 +32,17 @@
         </if>
     </select>
 
-    <!--모든 서비스 목록-->
-    <select id="allServiceList" resultType="FindServiceDto">
+    <!--해당 페이지 서비스 목록-->
+    <select id="allServiceList" parameterType="map" resultType="FindServiceDto">
         SELECT id, email, regUser, companyName, companyNo, isPermit, confirmAt, regAt
+        FROM service
+        limit #{pagePerData}
+        offset #{offset}
+    </select>
+
+    <!--모든 서비스 개수 가져오기-->
+    <select id="getListSize" resultType="Integer">
+        SELECT count(email)
         FROM service
     </select>
 

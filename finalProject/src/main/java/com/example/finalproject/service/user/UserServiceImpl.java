@@ -71,13 +71,24 @@ public class UserServiceImpl implements UserService{
 
     // admin 유저 목록 가져오기
     @Override
-    public List<UserDto> getUserList(String type) {
-        Optional<List<UserDto>> findAdminList = Optional.ofNullable(userMapper.getUserList(type));
+    public List<UserDto> getUserList(String type, int page, int pagePerData) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("pagePerData", pagePerData);
+        map.put("offset", page * pagePerData);
+
+        Optional<List<UserDto>> findAdminList = Optional.ofNullable(userMapper.getUserList(map));
         if(findAdminList.isEmpty()){
             return new ArrayList<>();
         }
 
         return findAdminList.get();
+    }
+
+    // admin or user 인원 수 가져오기
+    @Override
+    public int getUserCount(String type) {
+        return userMapper.getUserCount(type);
     }
 
     // 최근 접속일 설정

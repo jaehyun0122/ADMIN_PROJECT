@@ -7,6 +7,8 @@ import com.example.finalproject.dto.service.ServiceRegisterDto;
 import com.example.finalproject.service.FileService;
 import com.example.finalproject.service.MailService;
 import com.example.finalproject.service.QuestionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.mail.smtp.SMTPSenderFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +36,8 @@ public class ServiceController {
      * @return
      */
     @GetMapping()
-    public String viewService(Authentication authentication, Model model){
+    public String viewService(Authentication authentication, Model model,
+                              @RequestParam(required = false, name = "page")Integer page) {
         List<FindServiceDto> serviceList = fileService.getServiceList(authentication, "all");
         model.addAttribute("serviceList", serviceList);
 
@@ -52,21 +55,6 @@ public class ServiceController {
         model.addAttribute("fileList", fileList);
 
         return "/admin/admin_service_detail";
-    }
-
-    /**
-     * 서비스 등록 상태에 따른 리턴
-     * @param statusMap
-     * @param model
-     * @param authentication
-     * @return
-     */
-    @PostMapping()
-    @ResponseBody
-    public List<FindServiceDto> viewServiceStatus(@RequestBody Map<String, String> statusMap, Model model, Authentication authentication){
-        List<FindServiceDto> serviceList = fileService.getServiceList(authentication, statusMap.get("status"));
-
-        return serviceList;
     }
 
     /**

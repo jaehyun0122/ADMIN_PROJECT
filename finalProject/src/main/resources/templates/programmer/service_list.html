@@ -8,12 +8,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-  <link href="/assets/css/styles.css" rel="stylesheet" />
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <th:block sec:authorize="hasRole('ROLE_USER')" th:replace="common/header :: navBar"/>
 <th:block sec:authorize="hasRole('ROLE_ADMIN')" th:replace="common/admin_header :: adminNavBar"/>
+<input type="hidden" name="serviceList" id="serviceList" th:value="${serviceList}">
 
 <!--  wrapper -->
 <div class="container my-5">
@@ -33,6 +33,14 @@
         <option value="승인">승인</option>
         <option value="대기">대기</option>
         <option value="반려">반려</option>
+      </select>
+    </div>
+    <!--페이지 데이터 수 설정-->
+    <div style="padding: 10px">
+      <select id="pagePerData" class="form-select form-select-sm" aria-label=".form-select-sm example">
+        <option value="10" selected>10개씩 보기</option>
+        <option value="20">20개씩 보기</option>
+        <option value="30">30개씩 보기</option>
       </select>
     </div>
 
@@ -57,15 +65,16 @@
           </tr>
           </thead>
           <tbody id="body">
-          <tr th:each="service, index : ${serviceList}" style="cursor: pointer" th:value="${service.id}" th:onclick="goDetail([[${service.id}]])">
-            <td th:text="${index.index+1}"></td>
-            <td th:text="${service.email}"></td>
-            <td th:if="${service.isPermit == 0}" th:text="대기"></td>
-            <td th:if="${service.isPermit == 1}" th:text="승인"></td>
-            <td th:if="${service.isPermit == 2}" th:text="반려"></td>
-            <td th:text="${service.regAt}"></td>
-            <td th:text="${service.confirmAt}"></td>
-          </tr>
+            <tr th:each="service, index : ${serviceList}" style="cursor: pointer" th:value="${service.id}" th:onclick="goDetail('[[${service.id}]]')">
+              <td th:text="${index.index+1}"></td>
+              <td th:text="${service.email}"></td>
+              <td th:if="${service.isPermit == 0}" th:text="대기"></td>
+              <td th:if="${service.isPermit == 1}" th:text="승인"></td>
+              <td th:if="${service.isPermit == 2}" th:text="반려"></td>
+              <td th:text="${service.regAt}"></td>
+              <td th:text="${service.confirmAt}"></td>
+            </tr>
+          <!--페이지 Button-->
           <div id="btnContainer"></div>
           </tbody>
         </table>
@@ -81,14 +90,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="/assets/js/common.js"></script>
 <script>
-  // 서비스 상세 페이지 요청 함수
-  function goDetail(id){
-    window.location.href="/service/detail?id="+id;
-  }
+    // 서비스 상세 페이지 요청 함수
+    function goDetail(id){
+      window.location.href="/service/detail?id="+id;
+    }
+
+    // 현재 페이지
+    let page = 1;
+    // 페이지 당 데이터
+    let pagePerData = 10;
+    setSelected();
 
   $(document).ready(function (){
+
     /*테이블 페이지 버튼 생성*/
-    makePageBtn([[${serviceList.size()}]]);
+    makePageBtn(parseInt("[[${total}]]"), pagePerData);
 
     /*이름 검색 기능*/
     $("#keyword").keyup(function (){
@@ -127,6 +143,19 @@
       }).parent().show();
     })
     /*End select box 검색*/
+
+    /*10, 20, 30, 모두 보기 검색*/
+    $("#pagePerData").on("change", function (){
+        pagePerData = $(this).val();
+
+      location.href="/admin/service?page="+page+"&pagePerData="+pagePerData;
+    })
+
+    /*페이지 버튼 이동*/
+    $(".page-btn").on("click", function (){
+      page = $(this).val();
+      location.href = "/admin/service?page=" + $(this).val()+"&pagePerData="+pagePerData;
+    })
 
   })
 

@@ -30,6 +30,4 @@ public interface AdminService {
     // 탈퇴 취소
     void unQuitUser(String email);
 
-    // 서비스 목록 가져오기
-    List<FindServiceDto> findServiceList();
 }

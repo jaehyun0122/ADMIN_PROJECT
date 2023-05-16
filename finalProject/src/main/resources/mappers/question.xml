@@ -11,6 +11,12 @@
         ORDER BY regAt
     </select>
 
+    <!--모든 문의 내역 개수 가져오기-->
+    <select id="getQuestionCount" resultType="Integer">
+        SELECT COUNT(email)
+        FROM question
+    </select>
+
     <!--문의 등록-->
     <insert id="registerQuestion" parameterType="QuestionDto">
         INSERT INTO question (email, title, content)
@@ -25,9 +31,11 @@
     </select>
 
     <!--admin용 문의 내역 가져오기-->
-    <select id="getQuestion" resultType="QuestionDto">
+    <select id="getQuestion" parameterType="map" resultType="QuestionDto">
         SELECT id, email, title, content, isAnswer, regAt
         FROM question
+        limit #{pagePerData}
+        offset #{offset}
     </select>
 
     <!--문의 답변 등록-->

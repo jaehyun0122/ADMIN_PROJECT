@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,16 +110,15 @@ public class FileServiceImpl implements FileService{
         return findResult.get();
     }
 
-    // 모든 등록 서비스 가져오기
+    // 모든 서비스 가져오기. 어드민 용
     @Override
-    public List<FindServiceDto> getServiceList(String type) {
-        return null;
-    }
+    public List<FindServiceDto> getServiceList(int page, int pagePerData) {
+        System.out.println(page+" "+pagePerData);
+        Map<String, Integer> map = new HashMap<>();
+        map.put("pagePerData", pagePerData);
+        map.put("offset", page*pagePerData);
 
-    @Override
-    public List<FindServiceDto> getServiceList() {
-
-        return serviceMapper.allServiceList();
+        return serviceMapper.allServiceList(map);
     }
 
     // 서비스 상세 정보
@@ -129,6 +127,14 @@ public class FileServiceImpl implements FileService{
         FindServiceDto serviceDetail = serviceMapper.getServiceDetail(id);
 
         return serviceDetail;
+    }
+
+    // 모든 서비스 개수 가져오기
+
+
+    @Override
+    public int getListSize() {
+        return serviceMapper.getListSize();
     }
 
     // 메일 발송을 위한 서비스 등록자 이메일 가져오기

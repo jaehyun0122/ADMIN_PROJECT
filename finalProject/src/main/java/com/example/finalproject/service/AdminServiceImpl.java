@@ -91,12 +91,4 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-    // 서비스 목록 가져오기
-
-    @Override
-    public List<FindServiceDto> findServiceList() {
-
-        return null;
-    }
-
 }
