@@ -40,7 +40,7 @@ public class MailService {
         String contactKey = null;
         Map<String, Object> excelInfoMap = new HashMap<>();
 
-        ByteArrayResource excelResource = createExcel(encryptKey, contactKey);
+        ByteArrayResource excelResource = null;
 
         try { // 서비스 암호화키, 접속키 생성
             helper.setFrom(authentication.getPrincipal().toString());
@@ -58,8 +58,8 @@ public class MailService {
         }
 
         try{ // Excel 파일 생성
-            // excel 생성
-            createExcel(encryptKey, contactKey);
+            excelResource = createExcel(encryptKey, contactKey);
+
             // file 테이블에 excel 파일 저장
             excelInfoMap = new HashMap<>();
             excelInfoMap.put("fileName", "가이드.xlsx");
@@ -82,14 +82,16 @@ public class MailService {
             throw new Exception("승인실패");
         }
 
-        // Excel 파일 DB 저장
-        serviceMapper.uploadFile(excelInfoMap);
+
         // 해당 서비스 키값 DB 저장
         // 해당 서비스 키값이 있는 경우 ( 재발송 )
         if(serviceMapper.isRegServiceKey(serviceId)){
             // service 테이블 serviceId로 검색 후 있으면 update
-
+            fileService.updateServiceKey(encryptKey, contactKey, serviceId);
+            fileService.updateGuidFile(excelInfoMap);
         }else{ // 처음 전송일 경우
+            // Excel 파일 DB 저장
+            serviceMapper.uploadFile(excelInfoMap);
             fileService.insertKey(encryptKey, contactKey, serviceId);
         }
 

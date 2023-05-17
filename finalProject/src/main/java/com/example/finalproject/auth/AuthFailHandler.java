@@ -1,6 +1,9 @@
 package com.example.finalproject.auth;
 
+import com.example.finalproject.exeption.GlobalException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
@@ -28,10 +31,11 @@ import java.net.URLEncoder;
 @Component
 @Slf4j
 public class AuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
+    private static final Logger logger = LoggerFactory.getLogger(AuthFailHandler.class);
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.info("로그인 실패 {}", exception.getMessage());
+        logger.info("로그인 실패 {}", exception.getMessage());
         // 에러 메시지를 UTF-8로 인코딩 안 하면 에러 발생
         String errorMessage = URLEncoder.encode(exception.getMessage(), "UTF-8");
 

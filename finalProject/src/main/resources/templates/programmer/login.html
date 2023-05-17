@@ -20,19 +20,13 @@
                                 <form method="post" th:action="@{/login}">
                                     <div class="form-floating mb-3">
                                         <input type="email" class="form-control form-control-lg light-300"
-                                               id="floatingemail" name="email" placeholder="Email">
+                                               id="floatingemail" name="email" placeholder="Email" minlength="1" required>
                                         <label for="floatingemail">Email</label>
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control light-300" rows="8" placeholder="Password"
-                                               type="password" name="password" id="floatingpassword"/>
+                                               type="password" name="password" id="floatingpassword" minlength="1" required/>
                                         <label for="floatingpassword">Password</label>
-                                    </div>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" id="inputRememberPassword" type="checkbox"
-                                               value=""/>
-                                        <label class="form-check-label" for="inputRememberPassword">Remember
-                                            Password</label>
                                     </div>
                                     <!-- 에러 메시지 출력 -->
                                     <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>

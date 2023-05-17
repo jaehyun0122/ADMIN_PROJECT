@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproject.mapper.ServiceMapper">
+
+    <!--서비스 등록 요청-->
+    <!--userGeneratedKeys : insert 작업 후 keyProperty id를 반환-->
+    <!--해당 서비스의 File을 file 테이블에서 외래키 연결을 위해-->
+    <insert id="serviceRegister" parameterType="ServiceRegisterDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO service(email, companyName, companyNo)
+        VALUES (#{email}, #{companyName}, #{companyNo})
+    </insert>
+
+    <!--파일 업로드-->
+    <!--BLOB 타입 : 대형 이진 객체 저장 타입. 이미지, 오디오, 비디오 등 멀티미디어 파일을 저장하는데 사용-->
+    <insert id="uploadFile" parameterType="map">
+        INSERT INTO file (fileName, fileByte, serviceId, type)
+        VALUES (#{fileName}, #{fileByte}, #{servicePk}, #{type})
+    </insert>
+
+    <!--로그인 유저 서비스 목록 가져오기-->
+    <!--파라미터 : 유저 이메일-->
+    <!--resultType : 등록 정보-->
+    <select id="getServiceList" parameterType="map" resultType="FindServiceDto">
+        SELECT id, email, companyName, companyNo, isPermit, confirmAt, regAt
+        FROM service
+        WHERE email = #{email}
+        LIMIT #{pagePerData}
+        OFFSET #{offset}
+    </select>
+
+    <!--로그인 유저 등록 서비스 총 개수 가져오기-->
+    <select id="getUserServiceCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM service
+        WHERE email like #{email}
+    </select>
+
+    <!--해당 페이지 서비스 목록-->
+    <select id="allServiceList" parameterType="map" resultType="FindServiceDto">
+        SELECT id, email, regUser, companyName, companyNo, isPermit, confirmAt, regAt
+        FROM service
+        limit #{pagePerData}
+        offset #{offset}
+    </select>
+
+    <!--모든 서비스 개수 가져오기-->
+    <select id="getListSize" resultType="Integer">
+        SELECT count(email)
+        FROM service
+    </select>
+
+    <!--서비스 상세 정보-->
+    <select id="getServiceDetail" parameterType="Integer" resultType="FindServiceDto">
+        SELECT id, email, companyName, companyNo, isPermit, regAt, confirmAt, negativeComment,
+               (select name from user where email like service.email) as name
+        FROM service
+        WHERE id = #{id}
+    </select>
+
+    <!--메일 발송을 위한 서비스 등록자 이메일 가져오기-->
+    <select id="getServiceRegUser" parameterType="Integer" resultType="string">
+        SELECT email
+        FROM service
+        WHERE id = #{id}
+    </select>
+
+    <!--file download-->
+    <select id="getFile" parameterType="map" resultType="findFileDto">
+        SELECT id, fileByte, fileName, type
+        FROM file
+        WHERE id = #{id}
+    </select>
+
+    <!--serviceId에 해당하는 file List 가져오기-->
+    <select id="getFileList" parameterType="Integer" resultType="FindFileDto">
+        SELECT id, fileName, fileByte, type
+        FROM file
+        WHERE serviceId = #{id}
+    </select>
+
+    <!--serviceId에 해당하는 file 업데이트-->
+    <update id="updateGuidFile" parameterType="map">
+        UPDATE service
+        SET fileByte = #{fileByte}
+        WHERE serviceId = #{servicePk}
+    </update>
+
+    <!--서비스 승인-->
+    <update id="updateIsPermit" parameterType="map">
+        UPDATE service
+        SET isPermit = 1, confirmAt = #{confirmAt}
+        WHERE id = #{id}
+    </update>
+
+    <!--서비스 승인 후 키값 저장-->
+    <insert id="insertKey" parameterType="map">
+        INSERT INTO service_key(serviceId, encryptKey, contactKey)
+        VALUES (#{serviceId}, #{encryptKey}, #{contactKey})
+    </insert>
+
+    <!--서비스 키 존재 여부 확인-->
+    <select id="isRegServiceKey" parameterType="Integer" resultType="boolean">
+        select EXISTS(
+            select 1 from service_key where serviceId=#{serviceId}
+            ) as exist_flag;
+    </select>
+
+    <!--서비스 키 존재 시 업데이트-->
+    <update id="updateServiceKey" parameterType="map">
+        UPDATE service_key
+        SET encryptKey = #{encryptKey}, contactKey = #{contactKey}
+        WHERE serviceId = #{serviceId}
+    </update>
+
+    <!--서비스 반려 isPermit = 2-->
+    <update id="denyService" parameterType="map">
+        UPDATE service
+        SET isPermit = 2, negativeComment = #{negativeComment}, confirmAt = #{confirmAt}, regUser = #{regUser}
+        WHERE id = #{id}
+    </update>
+
+    <!--대기, 승인, 반려 상태에 따른 서비스 개수-->
+    <select id="getServiceCount" parameterType="map" resultType="Integer">
+        SELECT COUNT(email)
+        FROM service
+        WHERE email LIKE #{email}
+            <if test='type == "0"'>
+                AND isPermit = 0
+            </if>
+            <if test='type == "1"'>
+                AND isPermit = 1
+            </if>
+            <if test='type == "2"'>
+                AND isPermit = 2
+            </if>
+    </select>
+
+    <!--문의 내역 현황 가져오기-->
+    <select id="getQuestionCount" resultType="Integer" parameterType="map">
+        SELECT COUNT(email)
+        FROM question
+        WHERE email like #{email}
+        <if test='type == 0'>
+            AND isAnswer = 0
+        </if>
+        <if test='type == 1'>
+            AND isAnswer = 1
+        </if>
+    </select>
+</mapper>

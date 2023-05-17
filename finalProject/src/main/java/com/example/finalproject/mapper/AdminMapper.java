@@ -31,4 +31,13 @@ public interface AdminMapper {
     // 탈퇴 취소
     int unQuitUser(String email);
 
+    // 서비스 현황
+    int getServiceCount(String type);
+
+    // 문의 현황
+    int getQuestionCount(String type);
+
+    // 가입 요청 현황
+    int getRegCount(String type);
+
 }

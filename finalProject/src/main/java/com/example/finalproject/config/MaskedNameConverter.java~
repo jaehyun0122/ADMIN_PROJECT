@@ -13,6 +13,8 @@ public class MaskedNameConverter extends ClassicConverter {
         if(message.startsWith(">") || message.startsWith("<")){
             return message;
         }
+        System.out.println("원본 메시지 : "+message);
+
         String[] parts = message.split(",");
         String userName = parts[0].trim();
         String phoneNo = parts[1].trim();

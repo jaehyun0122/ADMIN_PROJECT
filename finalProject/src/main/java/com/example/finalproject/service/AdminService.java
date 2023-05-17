@@ -30,4 +30,13 @@ public interface AdminService {
     // 탈퇴 취소
     void unQuitUser(String email);
 
+    // 서비스 현황 가져오기
+    int getServiceCount(String type);
+
+    // 문의 현황 가졍괴
+    int getQuestionCount(String type);
+
+    // 가입 요청 현황 가져오기
+    int getRegCount(String type);
+
 }

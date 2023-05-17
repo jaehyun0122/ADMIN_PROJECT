@@ -9,10 +9,13 @@ import java.util.Map;
 @Mapper
 public interface QuestionMapper {
     // 문의 내용 전부 리턴
-    List<QuestionDto> getQuestionList(String email);
+    List<QuestionDto> getQuestionList(Map<String, Object> map);
 
     // 모든 문의 내역 개수 가져오기
     int getQuestionCount();
+
+    // 로그인 유저 문의 내역 개수 가져오기
+    int getUserQuestionCount(String email);
 
     // 문의 등록
     int registerQuestion(QuestionDto questionDto);

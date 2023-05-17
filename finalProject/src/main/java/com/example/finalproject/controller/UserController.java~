@@ -29,7 +29,7 @@ public class UserController {
     public String profile(Authentication authentication, Model model){
         UserDto userProfile = userService.getUserProfile(authentication.getPrincipal().toString());
         model.addAttribute("userProfile", userProfile);
-        logger.info("유저프로필");
+
         return "/programmer/user_profile";
     }
 
@@ -45,7 +45,11 @@ public class UserController {
      * 비밀번호 변경 페이지
      */
     @GetMapping("/modify/password")
-    public String modifyPassword(){
+    public String modifyPassword(Model model, @RequestParam(required = false)String message){
+        if(message != null){
+            model.addAttribute("passChangeMsg", message);
+        }
+
         return "/programmer/user_profile_modify_password";
     }
 
@@ -54,7 +58,7 @@ public class UserController {
      */
     @PostMapping("/modify/password")
     @ResponseBody
-    public ResponseEntity<Boolean> modifyPassword(Authentication authentication, Model model, @RequestBody Map<String, String> reqData){
+    public ResponseEntity<Boolean> modifyPassword(Authentication authentication, @RequestBody Map<String, String> reqData){
         userService.modifyPassword(authentication, reqData.get("password"));
 
         return new ResponseEntity<>(true, HttpStatus.OK);

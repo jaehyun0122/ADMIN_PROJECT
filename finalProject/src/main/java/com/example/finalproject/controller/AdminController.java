@@ -33,9 +33,30 @@ public class AdminController {
     // admin 페이지 리턴
     @GetMapping()
     public String adminIndex(Model model){
+        // 서비스 현황
+        int serviceWaitCount = adminService.getServiceCount("0");
+        int servicePermitCount = adminService.getServiceCount("1");
+        int serviceReturnCount = adminService.getServiceCount("2");
+        // 문의 현황
+        int questionWaitCount = adminService.getQuestionCount("0");
+        int questionPermitCount = adminService.getQuestionCount("1");
+        // 가입 요청
+        int regWaitCount = adminService.getRegCount("0");
+        int regPermitCount = adminService.getRegCount("1");
 
-        return "admin/admin_index";
+        model.addAttribute("serviceWaitCount", serviceWaitCount);
+        model.addAttribute("servicePermitCount", servicePermitCount);
+        model.addAttribute("serviceReturnCount", serviceReturnCount);
+
+        model.addAttribute("questionWaitCount", questionWaitCount);
+        model.addAttribute("questionPermitCount", questionPermitCount);
+
+        model.addAttribute("regWaitCount", regWaitCount);
+        model.addAttribute("regPermitCount", regPermitCount);
+
+        return "/admin/admin_index";
     }
+
     // 관리자 등록 페이지
     @GetMapping("register")
     public String registerPage(){
@@ -52,31 +73,31 @@ public class AdminController {
 
     // 서비스 목록 페이지
     @GetMapping("service")
-    public String serviceListPage(Model model, @RequestParam(name = "page", required = false)Integer page, @RequestParam(name = "pagePerData", required = false)Integer pagePerData){
+    public String serviceListPage(Authentication authentication, Model model, @RequestParam(name = "page", required = false)Integer page){
         List<FindServiceDto> serviceList = new ArrayList<>();
 
         // 화면에 페이지 버튼 만들기 위해 모든 서비스 개수 가져오기
         int listSize = fileService.getListSize();
         // 초기 페이지에서 0~9의 데이터 가져오기
-        if (page==null && pagePerData == null) serviceList = fileService.getServiceList(0, 10);
-        else serviceList = fileService.getServiceList(page-1, pagePerData);
+        if (page==null) serviceList = fileService.getServiceList(0);
+        else serviceList = fileService.getServiceList(page-1);
 
         model.addAttribute("serviceList", serviceList);
         model.addAttribute("total", listSize);
 
-        return "/programmer/service_list";
+        return "/admin/admin_service_list";
     }
 
 
     // 관리자 목록 페이지
     @GetMapping("admins")
-    public String adminListPage(Model model, @RequestParam(name = "page", required = false)Integer page, @RequestParam(name = "pagePerData", required = false)Integer pagePerData){
+    public String adminListPage(Model model, @RequestParam(name = "page", required = false)Integer page){
         List<UserDto> adminList = new ArrayList<>();
         // admin 유저 총 인원 가져오기
         int adminUserCount = userService.getUserCount("ROLE_ADMIN");
 
-        if(page == null || pagePerData == null) adminList = userService.getUserList("admin", 0, 10);
-        else adminList = userService.getUserList("admin", page-1, pagePerData);
+        if(page == null) adminList = userService.getUserList("admin", 0);
+        else adminList = userService.getUserList("admin", page-1);
 
         model.addAttribute("total", adminUserCount);
         model.addAttribute("adminList", adminList);
@@ -94,13 +115,13 @@ public class AdminController {
     }
     // 가입 요청 목록 페이지
     @GetMapping("reg")
-    public String regRequestPage(Model model, @RequestParam(name = "page", required = false)Integer page, @RequestParam(name = "pagePerData", required = false)Integer pagePerData){
+    public String regRequestPage(Model model, @RequestParam(name = "page", required = false)Integer page){
         List<UserDto> userList = new ArrayList<>();
         // 요청 목록 가져오기
         int userCount = userService.getUserCount("ROLE_USER");
 
-        if(page == null || pagePerData == null) userList = userService.getUserList("user", 0, 10);
-        else userList = userService.getUserList("user", page - 1, pagePerData);
+        if(page == null) userList = userService.getUserList("user", 0);
+        else userList = userService.getUserList("user", page - 1);
 
         model.addAttribute("total", userCount);
         model.addAttribute("userList", userList);
@@ -170,18 +191,18 @@ public class AdminController {
     }
     // 문의 목록 페이지
     @GetMapping("question")
-    public String questionPage(Model model, @RequestParam(name = "page", required = false)Integer page, @RequestParam(name = "pagePerData", required = false)Integer pagePerData){
+    public String questionPage(Model model, @RequestParam(name = "page", required = false)Integer page){
         List<QuestionDto> questions = new ArrayList<>();
         // 모든 문의 내역 가져오기
         int questionCount = questionService.getQuestionCount();
 
-        if(page == null || pagePerData == null) questions = questionService.getQuestion(0, 10);
-        else questions = questionService.getQuestion(page - 1, pagePerData);
+        if(page == null) questions = questionService.getQuestion(0);
+        else questions = questionService.getQuestion(page - 1);
 
         model.addAttribute("total", questionCount);
         model.addAttribute("questionList", questions);
 
-        return "/programmer/question_list";
+        return "/admin/admin_question_list";
     }
 
     // 문의 답변 등록

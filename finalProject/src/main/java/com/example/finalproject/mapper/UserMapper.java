@@ -68,4 +68,7 @@ public interface UserMapper {
 
     // 최근 접속일 설정
     int updateLastLoginDate(Map<String, Object> reqData);
+
+    // 이메일 중복 체크
+    boolean isDuplicate(String email);
 }

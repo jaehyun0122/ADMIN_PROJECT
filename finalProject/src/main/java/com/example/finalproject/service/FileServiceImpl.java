@@ -5,9 +5,10 @@ import com.example.finalproject.dto.service.FindServiceDto;
 import com.example.finalproject.dto.service.ServiceRegisterDto;
 import com.example.finalproject.exeption.ErrorMessageEnum;
 import com.example.finalproject.exeption.ImageInvalidException;
-import com.example.finalproject.exeption.SqlFailException;
+import com.example.finalproject.exeption.NotValidFileException;
 import com.example.finalproject.mapper.ServiceMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -95,10 +96,10 @@ public class FileServiceImpl implements FileService{
      * @return
      */
     @Override
-    public List<FindServiceDto> getServiceList(Authentication authentication, String status) {
+    public List<FindServiceDto> getServiceList(Authentication authentication, int page) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("email", authentication.getPrincipal().toString());
-        paramMap.put("status", status);
+        paramMap.put("offset", page*10);
 
         Optional<List<FindServiceDto>> findResult
                 = Optional.ofNullable(sqlSession.selectList("getServiceList", paramMap));
@@ -112,11 +113,9 @@ public class FileServiceImpl implements FileService{
 
     // 모든 서비스 가져오기. 어드민 용
     @Override
-    public List<FindServiceDto> getServiceList(int page, int pagePerData) {
-        System.out.println(page+" "+pagePerData);
+    public List<FindServiceDto> getServiceList(int page) {
         Map<String, Integer> map = new HashMap<>();
-        map.put("pagePerData", pagePerData);
-        map.put("offset", page*pagePerData);
+        map.put("offset", page*10);
 
         return serviceMapper.allServiceList(map);
     }
@@ -129,8 +128,37 @@ public class FileServiceImpl implements FileService{
         return serviceDetail;
     }
 
-    // 모든 서비스 개수 가져오기
+    // 접속 유저 등록 서비스 개수 가져오기
+    @Override
+    public int getUserServiceCount(Authentication authentication) {
+        return serviceMapper.getUserServiceCount(authentication.getPrincipal().toString());
+    }
 
+    // image 확장자 확인
+    @Override
+    public void imageTypeCheck(List<MultipartFile> images) {
+        if (images == null) throw new NotValidFileException(ErrorMessageEnum.IMAGE_NOT_VALID);
+
+        boolean hasInvalidFileType = images.stream()
+                .anyMatch(file -> !file.getContentType().startsWith("image/"));
+
+        if (hasInvalidFileType) {
+            throw new NotValidFileException(ErrorMessageEnum.IMAGE_NOT_VALID);
+        }
+    }
+
+    // pdf 확장자 확인
+    @Override
+    public void pdfTypeCheck(MultipartFile file) {
+        if (!file.isEmpty()) {
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            if (!extension.equalsIgnoreCase("pdf")) {
+                throw new NotValidFileException(ErrorMessageEnum.PDF_NOT_VALID);
+            }
+        }else{
+            throw new NotValidFileException(ErrorMessageEnum.PDF_NOT_VALID);
+        }
+    }
 
     @Override
     public int getListSize() {
@@ -187,6 +215,12 @@ public class FileServiceImpl implements FileService{
 
     }
 
+    // 가이드 파일 업데이트
+    @Override
+    public void updateGuidFile(Map<String, Object> map) {
+        serviceMapper.updateGuidFile(map);
+    }
+
     // 서비스 승인
     @Override
     public void servicePermit(int id) {
@@ -235,6 +269,26 @@ public class FileServiceImpl implements FileService{
         fileList.forEach(file -> file.setBase64Encode("data:image/jpeg;base64," + Base64.getEncoder().encodeToString(file.getFileByte())));
 
         return fileList;
+    }
+
+    // 대기, 승인, 반려에 따른 서비스 개수 가져오기
+    @Override
+    public int getServiceCount(Authentication authentication, String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put("email", authentication.getPrincipal().toString());
+        map.put("type", type);
+
+        return serviceMapper.getServiceCount(map);
+    }
+
+    // 문의 내역 현황 가져오기
+    @Override
+    public int getQuestionCount(Authentication authentication, String type) {
+        Map<String, String> map = new HashMap<>();
+        map.put("email", authentication.getPrincipal().toString());
+        map.put("type", type);
+
+        return serviceMapper.getQuestionCount(map);
     }
 
     /**

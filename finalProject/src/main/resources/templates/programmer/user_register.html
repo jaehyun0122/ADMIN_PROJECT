@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>회원가입</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 <body>
 <th:block th:replace="common/header :: navBar"/>
+
 <div id="layoutAuthentication">
   <div id="layoutAuthentication_content">
     <main>
@@ -17,27 +20,45 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
               <div class="card-header"><h3 class="text-center font-weight-light my-4">회원가입</h3></div>
               <div class="card-body">
-                <form method="post" th:action="@{/register}">
+                <form id="registerForm" onsubmit="return false;">
                   <div class="form-floating mb-3">
-                    <input type="text" class="form-control form-control-lg light-300" id="floatingname" name="name" placeholder="이름">
-                    <label for="floatingname">이름</label>
+                    <input type="text" class="form-control form-control-lg light-300" maxlength="30" id="name" name="name" placeholder="이름" >
+                    <label for="name">이름</label>
+                    <div class="nameMsg" style="display: none; color: red">
+                      이름을 확인해 주세요.
+                    </div>
+                  </div>
+                  <div class="form-floating mb-3" style="display: flex">
+                    <input type="email" class="form-control form-control-lg light-300" id="email" maxlength="30" name="email" placeholder="Email">
+                    <label for="email">Email</label>
+                    <button class="btn btn-secondary" onclick="duplicationEmailCheck()">중복확인</button>
+                    <div class="emailMsg" style="display: none; color: red">
+                      이메일 형식을 확인해 주세요.
+                    </div>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="email" class="form-control form-control-lg light-300" id="floatingemail" name="email" placeholder="Email">
-                    <label for="floatingemail">Email</label>
+                    <input type="tel" class="form-control form-control-lg light-300" id="phone" name="phone" placeholder="전화번호">
+                    <label for="phone">전화번호</label>
+                    <div class="phoneMsg" style="display: none; color: red">
+                      전화번호를 확인해 주세요.
+                    </div>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="tel" class="form-control form-control-lg light-300" id="floatingphone" name="phoneNo" placeholder="전화번호">
-                    <label for="floatingphone">전화번호</label>
+                    <input type="password" class="form-control form-control-lg light-300" minlength="8" maxlength="15" id="password" name="password" placeholder="비밀번호">
+                    <label for="password">비밀번호</label>
+                    <div class="passMsg" style="display: none; color: red">
+                      비밀번호는 8자 이상이고 영문 , 숫자, 특수문자를 포함해 주세요.
+                    </div>
                   </div>
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control form-control-lg light-300" id="floatingpassword" name="password" placeholder="비밀번호">
-                    <label for="floatingphone">비밀번호</label>
+                    <input type="password" class="form-control form-control-lg light-300" minlength="8" maxlength="15" id="passwordCheck" name="passwordCheck" placeholder="비밀번호 확인">
+                    <label for="passwordCheck">비밀번호 확인</label>
+                    <div class="passwordCheckMsg" style="display: none; color: red">
+                      비밀번호를 확인해 주세요.
+                    </div>
                   </div>
-                  <!-- 에러 메시지 출력 -->
-                  <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>
                   <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">회원가입</button>
                   </div>
                 </form>
               </div>
@@ -50,4 +71,79 @@
 </div>
 
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/assets/js/common.js"></script>
+<script>
+  // 이메일 중복환인
+  let emailCheck = false;
+  // 이메일 중복검사 요청 함수
+  function duplicationEmailCheck(){
+    console.log($('input[name="email"]').val())
+    $.ajax({
+      url: "/email/check",
+      method: "POST",
+      data: {
+        email: $('input[name="email"]').val()
+      },
+      contentType: "application/json; charset=utf-8",
+      dataType: 'json',
+      beforeSend: function(xhr) {
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        if (csrfHeader) {
+          xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+        }
+      },
+      success: function (response) {
+        alert("사용가능한 이메일 입니다.");
+        $("#email").css("border-color", "green")
+        emailCheck = true;
+      },
+      error: function () {
+        alert("이미 사용중이거나 탈퇴한 이메일 입니다.");
+      }
+    })
+  }
+
+  $(document).ready(function (){
+    $("#submitBtn").on("click", function (event) {
+      event.preventDefault();
+
+        if(validName() && validEmail() && emailCheck && validPhone() && validPassword() && passwordCheck()){
+
+            let formData = {
+              email: $('input[name="email"]').val(),
+              name: $('input[name="name"]').val(),
+              phoneNo: $('input[name="phone"]').val(),
+              password: $('input[name="password"]').val(),
+            }
+
+            $.ajax({
+              url: '/register',
+              method: "POST",
+              data: JSON.stringify(formData),
+              contentType: "application/json; charset=utf-8",
+              dataType: 'json',
+              beforeSend: function(xhr) {
+                let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                if (csrfHeader) {
+                  xhr.setRequestHeader(csrfHeader, $("meta[name='_csrf']").attr("content"));
+                }
+              },
+              success: function (response) {
+                alert("가입완료");
+                location.href = "/"
+              },
+              error: function () {
+                alert("서버 오류 입니다. 다시 시도해 주세요");
+              }
+            }) // end ajax
+
+        } // end validate
+
+    }) // end submit
+
+  }) // end document.ready
+
+</script>
 </html>

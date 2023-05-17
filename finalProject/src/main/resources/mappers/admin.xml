@@ -51,4 +51,22 @@
         SET isQUit = 0
         WHERE email like #{email}
     </update>
+
+    <select id="getServiceCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM service
+        WHERE isPermit = #{type}
+    </select>
+
+    <select id="getQuestionCount" resultType="Integer" parameterType="string">
+        SELECT COUNT(email)
+        FROM question
+        WHERE isAnswer = #{type}
+    </select>
+
+    <select id="getRegCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM user
+        WHERE isPermit = #{type}
+    </select>
 </mapper>

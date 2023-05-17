@@ -25,11 +25,14 @@ public interface UserService {
     void modifyUserName(Authentication authentication, String userName);
 
     // admin or user 목록 가져오기
-    List<UserDto> getUserList(String type, int page, int pagePerData);
+    List<UserDto> getUserList(String type, int page);
 
     // admin or user 총 인원 가져오기
     int getUserCount(String type);
 
     // 최근 접속일 설정
     void setLastLoginDate(Authentication authentication);
+
+    // 이메일 중복 체크
+    boolean isDuplicate(String email);
 }

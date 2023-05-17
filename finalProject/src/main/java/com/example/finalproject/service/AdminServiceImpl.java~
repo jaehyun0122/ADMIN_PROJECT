@@ -92,20 +92,24 @@ public class AdminServiceImpl implements AdminService{
     }
 
     // 서비스 현황
+
     @Override
     public int getServiceCount(String type) {
-        return adminMapper.getServiceCount(type);
+        return 0;
     }
 
     // 문의 현황
+
     @Override
     public int getQuestionCount(String type) {
-        return adminMapper.getQuestionCount(type);
+        return 0;
     }
 
     // 가입 요청 현황
+
+
     @Override
     public int getRegCount(String type) {
-        return adminMapper.getRegCount(type);
+        return 0;
     }
 }

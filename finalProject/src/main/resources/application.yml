@@ -18,11 +18,15 @@ spring:
           starttls:
             enable: true
 
-# session time out 설정
+
 server:
   servlet:
-    session:
-      timeout: 8000 # 초 단위
+    session: # session time out 설정
+      timeout: 600 # 초 단위
+  error:
+    whitelabel:
+      enabled: false # 기본 whitelabel page 사용 안함.
+    path: /error # 에러 발생시 이동할 경로
 
 mybatis:
   type-aliases-package: com.example.finalproject.dto

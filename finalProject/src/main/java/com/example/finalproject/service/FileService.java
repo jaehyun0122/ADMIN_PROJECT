@@ -18,12 +18,18 @@ public interface FileService {
     // 서비스 등록
     void serviceRegister(ServiceRegisterDto serviceRegisterDto, Authentication authentication, MultipartFile pdf, List<MultipartFile> images) throws IOException;
 
-    // 서비스 목록 가져오기
-    List<FindServiceDto> getServiceList(Authentication authentication, String status);
+    // 파일 확장자 체크
+    void imageTypeCheck(List<MultipartFile> image);
+    void pdfTypeCheck(MultipartFile pdf);
 
+    // admin 서비스 가져오기
+    List<FindServiceDto> getServiceList(int page);
 
-    // 해당 페이지 서비스 가져오기
-    List<FindServiceDto> getServiceList(int page, int pagePerData);
+    // 접속 유저 서비스 페이지 데이터 가져오기
+    List<FindServiceDto> getServiceList(Authentication authentication, int page);
+
+    // 접속 유저 등록 서비스 총 개수 가져오기
+    int getUserServiceCount(Authentication authentication);
 
     // 모든 서비스 개수 가져오기
     int getListSize();
@@ -36,6 +42,9 @@ public interface FileService {
 
     // serviceId에 해당하는 file 가져오기
     List<FindFileDto> getFile(int id);
+
+    // serviceId에 해당하는 file update
+    void updateGuidFile(Map<String, Object> data);
 
     // 파일 다운로드 Http Response 생성
     ResponseEntity createHttpResponse(FindFileDto findFile) throws UnsupportedEncodingException;
@@ -54,4 +63,11 @@ public interface FileService {
 
     // 서비스 반려
     void serviceDeny(Map<String, Object> reqData, Authentication authentication);
+
+    // 대기, 승인, 반려에 따른 서비스 개수 가져오기
+    int getServiceCount(Authentication authentication, String type);
+
+    // 문의 내역 현화 가져오기
+    int getQuestionCount(Authentication authentication, String type);
+
 }

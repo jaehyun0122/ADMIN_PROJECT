@@ -26,17 +26,22 @@
         SELECT id, email, companyName, companyNo, isPermit, confirmAt, regAt
         FROM service
         WHERE email = #{email}
-          /*전체 목록 아닐 때만 상태값에 따른 조건문 실행*/
-        <if test="status != 'all' ">
-            AND isPermit = #{status}
-        </if>
+        LIMIT 10
+        OFFSET #{offset}
+    </select>
+
+    <!--로그인 유저 등록 서비스 총 개수 가져오기-->
+    <select id="getUserServiceCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM service
+        WHERE email like #{email}
     </select>
 
     <!--해당 페이지 서비스 목록-->
     <select id="allServiceList" parameterType="map" resultType="FindServiceDto">
         SELECT id, email, regUser, companyName, companyNo, isPermit, confirmAt, regAt
         FROM service
-        limit #{pagePerData}
+        limit 10
         offset #{offset}
     </select>
 
@@ -75,6 +80,13 @@
         WHERE serviceId = #{id}
     </select>
 
+    <!--serviceId에 해당하는 file 업데이트-->
+    <update id="updateGuidFile" parameterType="map">
+        UPDATE file
+        SET fileByte = #{fileByte}
+        WHERE serviceId = #{servicePk}
+    </update>
+
     <!--서비스 승인-->
     <update id="updateIsPermit" parameterType="map">
         UPDATE service
@@ -109,4 +121,32 @@
         WHERE id = #{id}
     </update>
 
+    <!--대기, 승인, 반려 상태에 따른 서비스 개수-->
+    <select id="getServiceCount" parameterType="map" resultType="Integer">
+        SELECT COUNT(email)
+        FROM service
+        WHERE email LIKE #{email}
+            <if test='type == "0"'>
+                AND isPermit = 0
+            </if>
+            <if test='type == "1"'>
+                AND isPermit = 1
+            </if>
+            <if test='type == "2"'>
+                AND isPermit = 2
+            </if>
+    </select>
+
+    <!--문의 내역 현황 가져오기-->
+    <select id="getQuestionCount" resultType="Integer" parameterType="map">
+        SELECT COUNT(email)
+        FROM question
+        WHERE email like #{email}
+        <if test='type == 0'>
+            AND isAnswer = 0
+        </if>
+        <if test='type == 1'>
+            AND isAnswer = 1
+        </if>
+    </select>
 </mapper>

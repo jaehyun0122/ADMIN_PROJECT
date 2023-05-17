@@ -49,9 +49,10 @@ public class UserServiceImpl implements UserService{
         dataMap.put("email", authentication.getPrincipal().toString());
         dataMap.put("password", passwordEncoder.encode(password));
 
-        if(userMapper.modifyPassword(dataMap) != 1){
-            throw new SqlFailException(ErrorMessageEnum.SQL_ERROR);
-        }
+        // 비밀번호 변경
+        userMapper.modifyPassword(dataMap);
+        // 변경 후 패스워드 틀린 횟수 초기화
+        userMapper.passwordReset(authentication.getPrincipal().toString());
 
     }
 
@@ -64,18 +65,15 @@ public class UserServiceImpl implements UserService{
         dataMap.put("email", authentication.getPrincipal().toString());
         dataMap.put("name", userName);
 
-        if(userMapper.modifyUserName(dataMap) != 1){
-            throw new SqlFailException(ErrorMessageEnum.SQL_ERROR);
-        };
+        userMapper.modifyUserName(dataMap);
     }
 
     // admin 유저 목록 가져오기
     @Override
-    public List<UserDto> getUserList(String type, int page, int pagePerData) {
+    public List<UserDto> getUserList(String type, int page) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);
-        map.put("pagePerData", pagePerData);
-        map.put("offset", page * pagePerData);
+        map.put("offset", page * 10);
 
         Optional<List<UserDto>> findAdminList = Optional.ofNullable(userMapper.getUserList(map));
         if(findAdminList.isEmpty()){
@@ -101,4 +99,10 @@ public class UserServiceImpl implements UserService{
         userMapper.updateLastLoginDate(reqData);
     }
 
+    // 이메일 중복 체크
+
+    @Override
+    public boolean isDuplicate(String email) {
+        return false;
+    }
 }

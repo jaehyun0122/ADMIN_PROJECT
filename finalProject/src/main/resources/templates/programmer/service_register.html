@@ -16,27 +16,33 @@
                   <form th:action="@{/service/register}" method="post" enctype="multipart/form-data"> <!--java에서 multipartfile을 처리하기 위해 enctype 설정-->
                       <div class="mb-3">
                           <label for="companyName" class="form-label">회사명</label>
-                          <input type="text" name="companyName" class="form-control" id="companyName">
+                          <input type="text" name="companyName" maxlength="30" class="form-control" id="companyName">
                       </div>
                       <div class="mb-3">
-                          <label for="ownerNum" class="form-label">사업자번호</label>
-                          <input type="number" name="companyNo" class="form-control" id="ownerNum">
+                          <label for="companyNo" class="form-label">사업자번호</label>
+                          <input type="text" name="companyNo" minlength="10" maxlength="10" class="form-control" id="companyNo" placeholder="'-'를 제외하고 입력해주세요">
                       </div>
                       <div class="mb-3">
-                          <label for="image" class="custom-file-input">이미지</label>
-                          <input type="file" name="image" class="form-control" id="image" multiple>
+                          <label for="image" class="custom-file-input" accept="image/jpeg, image/png">이미지</label>
+                          <input type="file" name="image" class="form-control" id="image" multiple placeholder="jpeg 또는 png 파일">
                       </div>
-                      <!-- 에러 메시지 출력 -->
-                      <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>
                       <div class="mb-3">
                           <label class="custom-file-input" for="pdf">사업자 등록증</label>
-                          <input type="file" name="pdf" class="form-control" id="pdf">
+                          <input type="file" name="pdf" class="form-control" id="pdf" accept="application/pdf">
                       </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <div th:if="${errorMessage != null}" th:text="${errorMessage}" style="color: red">
+
+                      </div>
+                      <button type="submit" class="btn btn-secondary">등록</button>
                   </form>
               </div>
           </div>
       </div>
   </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/assets/js/common.js"></script>
+<script>
+    companyNoCheck()
+</script>
 </html>

@@ -12,8 +12,11 @@ public interface ServiceMapper {
     // 서비스 등록
     int serviceRegister(ServiceRegisterDto serviceRegisterDto);
 
-    // 서비스 목록 가져오기
+    // 로그인 유저 서비스 목록 가져오기
     List<FindServiceDto> getServiceList(Map<String, String> paramMap);
+
+    // 로그인 유저 총 서비스 수 가져오기
+    int getUserServiceCount(String email);
 
     // 검색에 맞는 등록 서비스 가져오기.
     List<FindServiceDto> getService(String type);
@@ -32,6 +35,9 @@ public interface ServiceMapper {
 
     // serviceId에 해당하는 파일 가져오기
     List<FindFileDto> getFileList(int id);
+
+    // serviceId에 해당하는 파일 업데이트
+    void updateGuidFile(Map<String, Object> map);
 
     // file 업로드
     int uploadFile(Map<String, Object> fileInfo);
@@ -53,5 +59,12 @@ public interface ServiceMapper {
 
     // 서비스 키 존재 시 업데이트
     int updateServiceKey(Map<String, Object> keyMap);
+
+    // 대기, 승인, 반려 상태에 따른 서비스 개수
+    int getServiceCount(Map<String, String> map);
+
+    // 문의 내역 현황
+    int getQuestionCount(Map<String, String> map);
+
 
 }

@@ -15,17 +15,14 @@
             <div class="col-lg-8">
                 <form th:action="@{/service/question/register}" method="post">
                     <div class="mb-3">
-                        <label for="title" class="form-label">제목</label>
-                        <input type="text" class="form-control" name="title" id="title">
+                        <label for="title" class="form-label">제목(30자)</label>
+                        <input type="text" class="form-control" name="title" id="title" minlength="1" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="content" class="form-label">내용</label>
-                        <textarea name="content" class="form-control" id="content"></textarea>
+                        <label for="content" class="form-label">내용(500자)</label>
+                        <textarea name="content" class="form-control" id="content" minlength="1" maxlength="500" required></textarea>
                     </div>
-
-                    <!-- 에러 메시지 출력 -->
-                    <p th:if="${errorMessage != null}" style="color: red" th:text="${errorMessage}"></p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-secondary">등록</button>
                 </form>
             </div>
         </div>

@@ -1,31 +1,50 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.user.UserDto;
-import com.example.finalproject.dto.user.UserRegisterDto;
-import com.example.finalproject.service.MailService;
+import com.example.finalproject.service.FileService;
 import com.example.finalproject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @Controller
 @RequiredArgsConstructor
 public class MainController {
     private final UserService userService;
-
+    private final FileService fileService;
     /**
      * main page
      * @return
      */
     @GetMapping
-    public String main(){
+    public String main(Authentication authentication, Model model){
+        // 대기 서비스 카운트
+        int waitCount = fileService.getServiceCount(authentication, "0");
+        // 승인 서비스 카운트
+        int permitCount = fileService.getServiceCount(authentication, "1");
+        // 반려 서비스 카운트
+        int returnCount = fileService.getServiceCount(authentication, "2");
+
+        // 문의 내역 가져오기
+        int notAnswer = fileService.getQuestionCount(authentication, "0");
+        int answer = fileService.getQuestionCount(authentication, "1");
+
+        model.addAttribute("permitCount", permitCount);
+        model.addAttribute("waitCount", waitCount);
+        model.addAttribute("returnCount", returnCount);
+
+        model.addAttribute("answerCount", answer);
+        model.addAttribute("notAnswerCount", notAnswer);
+
+
         return "/programmer/index";
     }
 
@@ -67,12 +86,28 @@ public class MainController {
      * @return
      */
     @PostMapping("register")
-    public String userRegister(Model model, UserDto user){
+    @ResponseBody
+    public ResponseEntity<Boolean> userRegister(Model model,@RequestBody UserDto user){
         userService.insertUser(user);
 
-        return "/programmer/index";
+        return new ResponseEntity(true, HttpStatus.OK);
     }
 
+    /**
+     * 이메일 중복 체크
+     */
+    @PostMapping("/email/check")
+    @ResponseBody
+    public ResponseEntity<Boolean> emailCheck(@RequestBody Map<String, String> data){
+        String email = data.get("email");
+        System.out.println(email);
+
+        boolean duplicate = userService.isDuplicate(email);
+        if (duplicate){
+            return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 
     /**
      * logout

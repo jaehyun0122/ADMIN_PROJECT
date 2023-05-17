@@ -3,18 +3,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.finalproject.mapper.QuestionMapper">
-    <!--모든 문의 내용 가져오기. 등록일 오름차순-->
-    <select id="getQuestionList" parameterType="string" resultType="QuestionDto">
-        SELECT id, title, content, regAt, isAnswer
+    <!--로그인 유저 문의 목록 가져오기. 등록일 오름차순-->
+    <select id="getQuestionList" parameterType="map" resultType="QuestionDto">
+        SELECT id, title, content, regAt, isAnswer, email
         FROM question
         WHERE email like #{email}
         ORDER BY regAt
+        LIMIT 10
+        OFFSET #{offset}
     </select>
 
     <!--모든 문의 내역 개수 가져오기-->
     <select id="getQuestionCount" resultType="Integer">
         SELECT COUNT(email)
         FROM question
+    </select>
+
+    <!--로그인 유저 문의 내역 개수 가져오기-->
+    <select id="getUserQuestionCount" parameterType="string" resultType="Integer">
+        SELECT COUNT(email)
+        FROM question
+        WHERE email like #{email}
     </select>
 
     <!--문의 등록-->
@@ -34,7 +43,7 @@
     <select id="getQuestion" parameterType="map" resultType="QuestionDto">
         SELECT id, email, title, content, isAnswer, regAt
         FROM question
-        limit #{pagePerData}
+        limit 10
         offset #{offset}
     </select>
 

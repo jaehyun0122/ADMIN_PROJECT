@@ -38,3 +38,7 @@ table.alt thead {
     border-bottom: 0; }
 table.alt tfoot {
     border-top: 0; }
+
+#btnContainer button{
+    margin: 10px;
+}

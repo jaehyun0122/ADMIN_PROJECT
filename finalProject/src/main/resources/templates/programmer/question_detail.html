@@ -2,14 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>서비스</title>
+  <title>문의 상세</title>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 <body>
-<th:block th:replace="common/header :: navBar"/>
+<th:block sec:authorize="hasRole('ROLE_ADMIN')" th:replace="common/admin_header :: adminNavBar"/>
+<th:block sec:authorize="hasRole('ROLE_USER')" th:replace="common/header :: navBar"/>
+
 <div class="container">
     <div class="row justify-content-center">
     <div class="col-lg-5">
@@ -42,10 +44,9 @@
         </div>
 
         <!--관리자 접속시 답변 부분-->
-        <div>
-          <textarea sec:authorize="hasRole('ROLE_ADMIN')" id="answer"></textarea>
-          <button sec:authorize="hasRole('ROLE_ADMIN')"
-                  type="submit" id="ok" class="btn btn-secondary">답변하기
+        <div sec:authorize="hasRole('ROLE_ADMIN')" style="text-align: center; display: flex; flex-direction: column;">
+          <textarea id="answer"></textarea>
+          <button type="submit" id="ok" class="btn btn-secondary">답변하기
           </button>
         </div>
 

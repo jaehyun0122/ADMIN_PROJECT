@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +38,19 @@ public class ServiceController {
      */
     @GetMapping()
     public String viewService(Authentication authentication, Model model,
-                              @RequestParam(required = false, name = "page")Integer page) {
-        List<FindServiceDto> serviceList = fileService.getServiceList(authentication, "all");
+                              @RequestParam(name = "page", required = false)Integer page, @RequestParam(name = "pagePerData", required = false)Integer pagePerData) {
+        List<FindServiceDto> serviceList = new ArrayList<>();
+        // 접속 유저 총 서비스 개수 가져오기
+        int userServiceCount = fileService.getUserServiceCount(authentication);
+
+        if(page == null){
+            serviceList = fileService.getServiceList(authentication, 0);
+        }else{
+            serviceList = fileService.getServiceList(authentication, page-1);
+        }
+
         model.addAttribute("serviceList", serviceList);
+        model.addAttribute("total", userServiceCount);
 
         return "/programmer/service_list";
     }
@@ -58,14 +69,22 @@ public class ServiceController {
     }
 
     /**
-     * 문의하기 페이지
-     * @return
+     * 문의목록 페이지
      */
     @GetMapping("question")
-    public String question(Model model, Authentication authentication){
+    public String question(Model model, Authentication authentication, @RequestParam(name = "page", required = false) Integer page){
+        List<QuestionDto> questionList = new ArrayList<>();
 
-        List<QuestionDto> questionList = questionService.getQuestionList(authentication);
+        if(page == null){
+            questionList = questionService.getQuestionList(authentication, 0);
+        }else{
+            questionList = questionService.getQuestionList(authentication, page-1);
+        }
+
+        int userQuestionCount = questionService.getUserQuestionCount(authentication);
+
         model.addAttribute("questionList", questionList);
+        model.addAttribute("total", userQuestionCount);
 
         return "/programmer/question_list";
     }
@@ -85,7 +104,7 @@ public class ServiceController {
     public String registerQuestion(QuestionDto questionDto, Authentication authentication){
         questionService.registerQuestion(authentication, questionDto);
 
-        return "/programmer/question_list";
+        return "redirect:/service/question";
     }
 
     // 문의 상세 페이지
@@ -118,10 +137,15 @@ public class ServiceController {
                                   ServiceRegisterDto serviceRegisterDto,
                                   Authentication authentication) throws IOException {
 
+        // 파일 형식 확인
+        fileService.imageTypeCheck(images);
+        fileService.pdfTypeCheck(pdf);
+        // 이미지 사이즈 확인
         fileService.imageSizeCheck(images);
+
         fileService.serviceRegister(serviceRegisterDto, authentication, pdf, images);
 
-        return "/programmer/service_register";
+        return "/programmer/service_list";
     }
 
     // 서비스 승인

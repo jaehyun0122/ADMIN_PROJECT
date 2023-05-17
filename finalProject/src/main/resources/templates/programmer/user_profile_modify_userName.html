@@ -24,9 +24,12 @@
                 <form action="#">
                   <div>
                     <label for="userName" th:classappend="form-control" name="name">이름</label>
-                    <input class="form-control form-control-lg light-300" type="text" name="userName" id="userName">
+                    <input class="form-control form-control-lg light-300" type="text" name="name" id="userName" minlength="1" required>
+                    <div class="nameMsg" style="display: none; color: red">
+                      이름을 확인해 주세요.
+                    </div>
                   </div>
-                  <button type="submit" id="submitBtn" class="btn btn-primary">수정</button>
+                  <button type="submit" id="submitBtn" class="btn btn-secondary">수정</button>
                 </form>
               </div>
             </div>
@@ -38,19 +41,17 @@
 </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/assets/js/common.js"></script>
 <script>
   $(document).ready(function () {
 
     $("#submitBtn").on("click", function (event) {
       event.preventDefault();
-
-      // // 비밀번호 길이도 체크 해야됨
-      // if ($('input[name="password"]').val() !== $('input[name="passwordCheck"]').val()) {
-      //   $("#errorMsg").css("display", "block");
-      // } else {
+      // 이름 유효성 검사 통과 시 요청
+      if(validName()){
 
         let param = {
-          "userName": $('input[name="userName"]').val()
+          "userName": $('input[name="name"]').val()
         }
 
         $.ajax({
@@ -67,20 +68,16 @@
           },
           success: function (data) {
             alert("변경완료");
-            location.href = "/"
+            location.href = "/user/profile"
           },
           error: function () {
             alert("서버 오류 입니다. 다시 시도해 주세요");
           }
         })
+      }
 
     })
 
   })
 </script>
-<style>
-  .table tr{
-    height: 100px;
-  }
-</style>
 </html>

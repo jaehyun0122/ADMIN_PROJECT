@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +45,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
         // 비밀번호 변경 후 90일 지났으면 변경 페이지로
         if(!userProfile.isCredentialsNonExpired()){
-            defaultUrl = "/user/modify/password";
+            String message = URLEncoder.encode( "비밀번호 변경일로 90일이 지났습니다. 비밀번호를 변경해 주세요.", "UTF-8");
+            defaultUrl = "/user/modify/password?message="+message;
         }else{
             // ADMIN 권한 사용자인 경우 ADMIN 페이지 URL 설정.
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

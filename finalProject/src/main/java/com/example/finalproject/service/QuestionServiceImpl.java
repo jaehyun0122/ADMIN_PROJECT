@@ -21,14 +21,12 @@ public class QuestionServiceImpl implements QuestionService{
      * @return
      */
     @Override
-    public List<QuestionDto> getQuestionList(Authentication authentication) {
-        Optional<List<QuestionDto>> questionList = Optional.ofNullable(sqlSession.selectList("getQuestionList", authentication.getPrincipal()));
-        // 조회 결과 없을 시 새 리스트 만들어 리턴
-        if(questionList.isEmpty()){
-            return new ArrayList<>();
-        }
+    public List<QuestionDto> getQuestionList(Authentication authentication, int page) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", authentication.getPrincipal().toString());
+        map.put("offset", page*10);
 
-        return questionList.get();
+        return questionMapper.getQuestionList(map);
     }
 
     /**
@@ -55,10 +53,9 @@ public class QuestionServiceImpl implements QuestionService{
 
     // admin용 문의 내역 가져오기
     @Override
-    public List<QuestionDto> getQuestion(int page, int pagePerData) {
+    public List<QuestionDto> getQuestion(int page) {
         Map<String, Integer> map = new HashMap<>();
-        map.put("pagePerData", pagePerData);
-        map.put("offset", page * pagePerData);
+        map.put("offset", page * 10);
 
         return questionMapper.getQuestion(map);
     }
@@ -67,6 +64,12 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public int getQuestionCount() {
         return questionMapper.getQuestionCount();
+    }
+
+    // 로그인 유저 문의 내역 개수 가져오기
+    @Override
+    public int getUserQuestionCount(Authentication authentication) {
+        return questionMapper.getUserQuestionCount(authentication.getPrincipal().toString());
     }
 
     // 문의 답변 등록

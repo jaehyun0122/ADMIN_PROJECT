@@ -77,7 +77,7 @@
               <if test="type == 'user'">
                 'ROLE_USER'
               </if>
-        limit #{pagePerData}
+        limit 10
         offset #{offset}
     </select>
 
@@ -94,5 +94,10 @@
         SET lastLoginDate = NOW()
         WHERE email like #{email}
     </update>
+
+    <!--이메일 중복 체크-->
+    <select id="isDuplicate" parameterType="string" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM user WHERE email LIKE #{email})
+    </select>
 
 </mapper>
