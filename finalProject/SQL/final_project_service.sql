@@ -35,7 +35,7 @@ CREATE TABLE `service` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   CONSTRAINT `service_ibfk_1` FOREIGN KEY (`email`) REFERENCES `user` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `service` (
 
 LOCK TABLES `service` WRITE;
 /*!40000 ALTER TABLE `service` DISABLE KEYS */;
-INSERT INTO `service` VALUES ('aton','123',2,'2023-05-08 19:36:12','jeongjh122@atoncorp.com','2023-05-02 10:06:40','반려 사유.\n          ',1,'admin@admin'),('test','12',2,'2023-05-08 19:36:12','jeongjh122@atoncorp.com','2023-05-02 16:05:03','반려 사유.\n          ',2,'admin@admin'),('test','12',2,'2023-05-08 19:50:44','jeongjh122@atoncorp.com','2023-05-04 14:08:46','pdf 부적절.',3,'admin@admin'),('test','21',1,'2023-05-08 19:37:05','jeongjh122@atoncorp.com','2023-05-04 17:49:35','반려 사유.\n          ',4,'admin@admin'),('nexon','12',1,'2023-05-09 18:02:38','jeongjh122@atoncorp.com','2023-05-09 13:11:26',NULL,5,NULL),('kakao','12',1,'2023-05-09 18:06:35','jeongjh122@atoncorp.com','2023-05-09 13:12:47',NULL,6,NULL),('naver','123',1,'2023-05-09 18:03:15','jeongjh122@atoncorp.com','2023-05-09 13:14:23',NULL,7,NULL),('toss','123',1,NULL,'jeongjh122@atoncorp.com','2023-05-09 13:40:05',NULL,8,NULL),('line','324342',1,'2023-05-10 19:41:52','jeongjh122@atoncorp.com','2023-05-09 13:42:41',NULL,9,NULL),('배달의 민족','123456',0,NULL,'jeongjh122@atoncorp.com','2023-05-10 20:00:35',NULL,10,NULL),('당근마켓','456456',1,'2023-05-10 20:05:22','jeongjh122@atoncorp.com','2023-05-10 20:04:34',NULL,11,NULL);
+INSERT INTO `service` VALUES ('aton','123',2,'2023-05-08 19:36:12','jeongjh122@atoncorp.com','2023-05-02 10:06:40','반려 사유.\n          ',1,'admin@admin'),('test','12',2,'2023-05-08 19:36:12','jeongjh122@atoncorp.com','2023-05-02 16:05:03','반려 사유.\n          ',2,'admin@admin'),('test','12',2,'2023-05-08 19:50:44','jeongjh122@atoncorp.com','2023-05-04 14:08:46','pdf 부적절.',3,'admin@admin'),('test','21',1,'2023-05-08 19:37:05','jeongjh122@atoncorp.com','2023-05-04 17:49:35','반려 사유.\n          ',4,'admin@admin'),('nexon','12',1,'2023-05-09 18:02:38','jeongjh122@atoncorp.com','2023-05-09 13:11:26',NULL,5,NULL),('kakao','12',1,'2023-05-09 18:06:35','jeongjh122@atoncorp.com','2023-05-09 13:12:47',NULL,6,NULL),('naver','123',1,'2023-05-09 18:03:15','jeongjh122@atoncorp.com','2023-05-09 13:14:23',NULL,7,NULL),('toss','123',1,NULL,'jeongjh122@atoncorp.com','2023-05-09 13:40:05',NULL,8,NULL),('line','324342',1,'2023-05-10 19:41:52','jeongjh122@atoncorp.com','2023-05-09 13:42:41',NULL,9,NULL),('배달의 민족','123456',1,'2023-05-17 14:27:15','jeongjh122@atoncorp.com','2023-05-10 20:00:35',NULL,10,NULL),('당근마켓','456456',1,'2023-05-10 20:05:22','jeongjh122@atoncorp.com','2023-05-10 20:04:34',NULL,11,NULL),('네오위즈','123',0,NULL,'jungjh122@naver.com','2023-05-15 15:52:01',NULL,12,NULL),('intellij','04650515',0,NULL,'zxc-02@nate.com','2023-05-16 19:46:19',NULL,13,NULL);
 /*!40000 ALTER TABLE `service` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-12 18:22:39
+-- Dump completed on 2023-05-17 17:49:24

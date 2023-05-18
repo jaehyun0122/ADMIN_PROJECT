@@ -37,7 +37,7 @@ CREATE TABLE `service_key` (
 
 LOCK TABLES `service_key` WRITE;
 /*!40000 ALTER TABLE `service_key` DISABLE KEYS */;
-INSERT INTO `service_key` VALUES (9,'9egcYT5Og5XKEtwifHNdxtdRKwdoa4w0','rOBjImdU8JJHGJop'),(11,'G3UjnZYMxNK14uz93qlkkrBttdlevUE0','4H7M7chRyECk8RZF');
+INSERT INTO `service_key` VALUES (9,'9egcYT5Og5XKEtwifHNdxtdRKwdoa4w0','rOBjImdU8JJHGJop'),(11,'G3UjnZYMxNK14uz93qlkkrBttdlevUE0','4H7M7chRyECk8RZF'),(10,'LvaEtyrGZ6627wqbiqU0miht6GuV5bzl','xdj74Y7hcxDHFhwS');
 /*!40000 ALTER TABLE `service_key` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-12 18:22:39
+-- Dump completed on 2023-05-17 17:49:24

@@ -32,7 +32,7 @@ CREATE TABLE `question` (
   PRIMARY KEY (`id`),
   KEY `question_ibfk_1` (`email`),
   CONSTRAINT `question_ibfk_1` FOREIGN KEY (`email`) REFERENCES `user` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `question` (
 
 LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES ('jeongjh122@atoncorp.com','등록테스트','등록테스트 입니다.',1,0,'2023-05-02 11:30:35'),('jeongjh122@atoncorp.com','테스트','테스트 입니다.',2,1,'2023-05-02 11:31:42');
+INSERT INTO `question` VALUES ('jeongjh122@atoncorp.com','등록테스트','등록테스트 입니다.',1,0,'2023-05-02 11:30:35'),('jeongjh122@atoncorp.com','테스트','테스트 입니다.',2,1,'2023-05-02 11:31:42'),('jeongjh122@atoncorp.com','','',3,0,'2023-05-17 10:33:37'),('jeongjh122@atoncorp.com','','',4,0,'2023-05-17 10:33:51'),('jeongjh122@atoncorp.com','','',5,0,'2023-05-17 13:46:36'),('jeongjh122@atoncorp.com','d','d',6,0,'2023-05-17 13:47:58'),('jeongjh122@atoncorp.com','tes','tes',7,0,'2023-05-17 13:51:10'),('jeongjh122@atoncorp.com','tes','test',8,0,'2023-05-17 13:51:47'),('test@test.com','test','test',9,0,'2023-05-17 17:44:25');
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-12 18:22:39
+-- Dump completed on 2023-05-17 17:49:24
