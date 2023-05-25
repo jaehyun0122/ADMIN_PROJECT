@@ -100,9 +100,8 @@ public class UserServiceImpl implements UserService{
     }
 
     // 이메일 중복 체크
-
     @Override
     public boolean isDuplicate(String email) {
-        return false;
+        return userMapper.isDuplicate(email);
     }
 }

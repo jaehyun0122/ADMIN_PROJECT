@@ -95,6 +95,13 @@
         WHERE email like #{email}
     </update>
 
+    <!--패스워드 틀린 횟수 초기화-->
+    <update id="passwordReset" parameterType="string">
+        UPDATE user
+        SET passwordCount = 0
+        WHERE email like #{email}
+    </update>
+
     <!--이메일 중복 체크-->
     <select id="isDuplicate" parameterType="string" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM user WHERE email LIKE #{email})

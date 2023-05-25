@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expiredUrl("/");
         http
             .authorizeRequests()
-            .antMatchers( "/login","/register").permitAll() // 해당 경로 모두 접근 허용
+            .antMatchers( "/login","/register","/email/check").permitAll() // 해당 경로 모두 접근 허용
             .antMatchers("/assets/**").permitAll() // 해당 경로 모두 접금 허용
             .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')") // /admin 요청은 어드민 권한 사용자만
             .anyRequest().access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')") // 나머지 요청들은 USER 이상 권한을 가지고 있어야 접근할 수 있다.

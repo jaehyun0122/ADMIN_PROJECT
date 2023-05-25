@@ -96,13 +96,13 @@ public class MainController {
     /**
      * 이메일 중복 체크
      */
-    @PostMapping("/email/check")
+    @PostMapping("email/check")
     @ResponseBody
     public ResponseEntity<Boolean> emailCheck(@RequestBody Map<String, String> data){
         String email = data.get("email");
         System.out.println(email);
-
         boolean duplicate = userService.isDuplicate(email);
+
         if (duplicate){
             return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
         }

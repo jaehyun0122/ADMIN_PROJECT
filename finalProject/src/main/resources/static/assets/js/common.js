@@ -48,7 +48,7 @@ function passwordCheck(){
         let passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
 
         // 유효성 검사 실행
-        if (passwordRegex.test(password)) {
+        if (passwordRegex.test(password) && password.length > 0) {
             // 유효한 패스워드인 경우
             $(".passMsg").css("display", "none");
             return true;
@@ -65,7 +65,7 @@ function passwordCheck(){
     /*한글 또는 영어만 허용*/
     function validName() {
         // 영어와 한글만 허용하는 정규식
-        let regex = /^(?:[a-zA-Z]+|[ㄱ-ㅎ가-힣]+)$/;
+        let regex = /^(?:[ㄱ-ㅎㅏ-ㅣ가-힣]+|[a-zA-Z\s]+)$/;
         let input = $('input[name="name"]').val();
 
         // 공백인 경우
@@ -93,7 +93,7 @@ function passwordCheck(){
         // 이메일 유효성을 검사하는 정규식
         let regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-        if(regex.test(email)){
+        if(regex.test(email) && email.length > 0){
             $(".emailMsg").css("display", "none");
             return true;
         }else{
@@ -105,20 +105,29 @@ function passwordCheck(){
         }
 
     }
+
+    /*이메일 중복 확인 검사*/
+    function emailCheckClick(emailCheck){
+        if(emailCheck){
+            return true;
+        }else{
+            alert("이메일 중복확인을 진행해주세요.");
+        }
+    }
+
     /*전화번호*/
     function validPhone() {
-        let phoneNumber = $('input[name=phone]').val();
+        let phoneNumber = $('input[name="phone"]').val();
+        console.log(phoneNumber)
         // 전화번호 유효성을 검사하는 정규식
-        let regex = /^\d{3}\d{3,4}\d{4}$/;
+        let regex = /^[0-9]+$/;
 
-        if(phoneNumber.includes("-")){
-            phoneNumber = phoneNumber.replace("-", "");
-        }
-
-        if(regex.test(phoneNumber)){
+        if(regex.test(phoneNumber) && phoneNumber.length > 0){
+            console.log("good")
             $(".phoneMsg").css("display", "none");
             return true;
         }else{
+            console.log("bad")
             $("#phone").focus();
             $(".phoneMsg").css("display", "block");
             return false;

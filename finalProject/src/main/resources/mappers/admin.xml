@@ -20,7 +20,7 @@
     <!--계정 잠금 해제-->
     <update id="unlockUser" parameterType="string">
         UPDATE user
-        SET isLock = 0
+        SET isLock = 0, passwordCount = 0
         WHERE email like #{email}
     </update>
 
@@ -34,7 +34,7 @@
     <!--계정 중지 해제-->
     <update id="unPauseUser" parameterType="string">
         UPDATE user
-        SET isPause = 0
+        SET isPause = 0, passwordCount = 0
         WHERE email like #{email}
     </update>
 
@@ -48,7 +48,7 @@
     <!--계정 탈퇴 해제-->
     <update id="unQuitUser" parameterType="string">
         UPDATE user
-        SET isQUit = 0
+        SET isQUit = 0, passwordCount = 0
         WHERE email like #{email}
     </update>
 
