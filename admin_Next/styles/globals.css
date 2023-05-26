@@ -1,0 +1,31 @@
+table{
+    border: 1px solid;
+}
+td{
+    text-align: center;
+    cursor: pointer;
+}
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+tr:hover {
+    background-color: #F0D9D5;
+}
+button{
+    border: none;
+    padding: 15px 32px;
+    margin: 10px;
+}
+button:hover{
+    background-color: beige;
+    cursor: pointer;
+}
+
+input{
+    height: 50px;
+    border: 2px solid;
+}
+
+#loginForm{
+    text-align: center;
+}

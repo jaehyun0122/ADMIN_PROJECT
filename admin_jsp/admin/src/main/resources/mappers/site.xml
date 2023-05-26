@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.SiteDao">
+
+	<select id="getTotalCnt" resultType="int">
+		select count(*) from aton_company_site
+	</select>
+
+	<select id="getSiteList" resultType="CompanySiteDto" parameterType="int">
+		select ats.siteId
+			, ats.siteName
+			, ac.companynm
+			, ats.siteStatus
+			, ats.siteCalculate
+			, ats.siteRegDTTM
+			, ats.siteRegUser
+		from aton_company_site as ats
+		inner join aton_company ac
+		where ats.companyId = ac.companyId
+		order by ats.siteRegDTTM desc
+		limit 7
+		offset #{offset}
+	</select>
+	
+	<insert id="registerSite" parameterType="RegSiteDto">
+		insert into aton_company_site (
+			companyId
+			, siteName
+			, siteStatus
+			, siteCalculate
+			, siteProtocol
+			, siteUrlDetail
+			, siteRegDTTM
+			, siteManagerName
+			, siteManagerNumber
+			, siteManagerEmail
+			, siteType
+			, siteGearingUrl
+		) 
+		values (
+			 (select companyId from aton_company where companynm like #{company}) 
+			 , #{siteName}
+			 , #{siteStatus}
+			 , #{siteCalculate}
+			 , #{siteProtocol}
+			 , #{siteUrlDetail}
+			 , #{siteRegDTTM}
+			 , #{siteManagerName}
+			 , #{siteManagerNumber}
+			 , #{siteManagerEmail}
+			 , #{siteType}
+			 , #{siteGearingUrl}
+		)
+	</insert>
+	
+	
+	<insert id="newSite" parameterType="map">
+		insert into aton_company (companynm, feerate) 
+		values (#{companynm}, #{feerate})
+	</insert>
+	
+	<select id="getCompanynm" resultType="String">
+		select distinct companynm
+		from aton_company
+	</select>
+	
+	
+	<update id="updateSiteInfo" parameterType="map">
+		update aton_company set 
+	</update>
+	
+	<select id="getDetail" parameterType="int" resultType="RegSiteDto">
+		SELECT siteId 
+			, siteName
+			, siteStatus
+			, siteCalculate
+			, siteProtocol
+			, siteUrlDetail
+			, siteRegDTTM
+			, siteManagerName
+			, siteManagerNumber
+			, siteManagerEmail
+			, (SELECT companynm FROM aton_company ac WHERE ac.companyId = acs.companyId) as company
+			, siteType
+			, siteGearingUrl
+		FROM aton_company_site acs
+		WHERE siteId = #{id}
+	</select>
+	
+	<update id="modifySite" parameterType="RegSiteDto">
+		UPDATE aton_company_site
+		SET siteName = #{siteName}
+		, siteStatus = #{siteStatus}
+		, siteCalculate = #{siteCalculate}
+		, siteUrlDetail = #{siteUrlDetail}
+		, siteManagerName = #{siteManagerName}
+		, siteManagerNumber = #{siteManagerNumber}
+		, siteManagerEmail = #{siteManagerEmail}
+		WHERE siteId = #{siteId}
+		
+	</update>
+	
+	<delete id="deleteSite" parameterType="int">
+		DELETE FROM aton_company_site
+		WHERE siteId = #{siteId}
+	</delete>
+	
+	<select id="getSearchData" parameterType="SearchDto" resultType="CompanySiteDto">
+			SELECT	ats.siteId 
+				, ats.siteName
+				, ac.companynm
+				, ats.siteStatus
+				, ats.siteCalculate
+				, ats.siteRegDTTM
+				, ats.siteRegUser
+				, concat(ats.siteProtocol, ats.siteUrlDetail)
+			FROM aton_company_site as ats
+			INNER JOIN aton_company ac ON ats.companyId = ac.companyId
+			WHERE ac.companynm like #{company} 
+				AND ats.siteName like #{siteName}
+				AND ats.siteStatus like #{siteStatus}
+				AND ats.siteCalculate like #{siteCalculate}
+				AND concat(ats.siteProtocol, '://' ,ats.siteUrlDetail) like #{siteUrl}
+ 				AND 
+				<![CDATA[
+					DATE_FORMAT(siteRegDTTM, '%m/%d/%Y') >= date_format(STR_TO_DATE(#{startDate} , '%m/%d/%Y'), '%m/%d/%Y')
+				]]>
+					AND 
+				<![CDATA[	
+					DATE_FORMAT(siteRegDTTM, '%m/%d/%Y') <= date_format(STR_TO_DATE(#{endDate} , '%m/%d/%Y'), '%m/%d/%Y')
+				]]>
+			ORDER BY ats.siteRegDTTM desc
+	</select>
+</mapper>
