@@ -17,7 +17,7 @@
 			<div>
 				<div class="main_bnr" id="main_bnr">
 					<div class="item" th:each="info : ${infoList}">
-						<a th:href="@{|${info.detail_url}${info.id}|}"><img src="/images/aton.jpg" alt="배너"></a>
+						<a th:href="@{|${info.detail_url}${info.id}|}"><img th:src="${info.img_url}" alt="배너"></a>
 					</div>
 				</div>
 			</div>

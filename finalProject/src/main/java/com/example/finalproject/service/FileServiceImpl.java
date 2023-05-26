@@ -80,7 +80,7 @@ public class FileServiceImpl implements FileService{
         pdfMap.put("fileByte", pdf.getBytes());
         pdfMap.put("fileName", convertMultiPartToFile(pdf).getName());
         serviceMapper.uploadFile(pdfMap);
-
+        
         // 2. image 업로드
         for (MultipartFile image : images) {
             File convertFile = convertMultiPartToFile(image);

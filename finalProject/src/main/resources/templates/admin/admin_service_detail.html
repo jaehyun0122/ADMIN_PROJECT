@@ -78,8 +78,8 @@
               <!--isPermit. 0 대기 , 1 승인 , 2 반려-->
               <button sec:authorize="hasRole('ROLE_ADMIN')" th:if="${serviceDetail.isPermit == 0}" class="btn btn-secondary" onclick="serviceConfirm('승인')">승인</button>
               <button sec:authorize="hasRole('ROLE_ADMIN')" th:if="${serviceDetail.isPermit == 1}" class="btn btn-secondary" onclick="serviceConfirm('승인')">메일 재전송</button>
-              <textarea th:if="${serviceDetail.isPermit == 0}" sec:authorize="hasRole('ROLE_ADMIN')" placeholder="반려사유" id="denyAnswer"></textarea>
-              <button th:if="${serviceDetail.isPermit == 0}" sec:authorize="hasRole('ROLE_ADMIN')" id="negative" class="btn btn-secondary" onclick="serviceConfirm('반려')">반려</button>
+              <textarea th:if="${serviceDetail.isPermit == 0 || serviceDetail.isPermit == 2}" sec:authorize="hasRole('ROLE_ADMIN')" placeholder="반려사유" id="denyAnswer"></textarea>
+              <button th:if="${serviceDetail.isPermit == 0 || serviceDetail.isPermit == 2}" sec:authorize="hasRole('ROLE_ADMIN')" id="negative" class="btn btn-secondary" onclick="serviceConfirm('반려')">반려</button>
             </div>
           </div>
         </div>
